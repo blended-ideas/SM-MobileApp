@@ -8,5 +8,15 @@
 </ion-header>
 
 <ion-content>
+    <ion-card [routerDirection]="'forward'" [routerLink]="'/product'">
+        <ion-card-header>
+            <ion-card-title class="ion-text-center ion-margin">Products</ion-card-title>
+        </ion-card-header>
+    </ion-card>
 
+    <ion-card [routerDirection]="'forward'" [routerLink]="'/shift'">
+        <ion-card-header>
+            <ion-card-title class="ion-text-center ion-margin">Shifts</ion-card-title>
+        </ion-card-header>
+    </ion-card>
 </ion-content>

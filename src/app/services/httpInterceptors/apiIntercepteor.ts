@@ -10,7 +10,7 @@ export class APIInterceptor implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const token = this.sessionSrv.token.access;
+        const token = this.sessionSrv.token && this.sessionSrv.token.access;
         if (token) {
             const copiedRequest = request.clone({
                 headers: request.headers.append('Authorization', 'Bearer ' + token)

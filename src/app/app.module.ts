@@ -11,6 +11,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {APIInterceptor} from './services/httpInterceptors/apiIntercepteor';
 import {ResponseInterceptor} from './services/httpInterceptors/ResponseInterceptor';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     declarations: [AppComponent],
@@ -19,7 +20,8 @@ import {ResponseInterceptor} from './services/httpInterceptors/ResponseIntercept
         BrowserModule,
         IonicModule.forRoot(),
         AppRoutingModule,
-        HttpClientModule
+        HttpClientModule,
+        FontAwesomeModule,
     ],
     providers: [
         StatusBar,

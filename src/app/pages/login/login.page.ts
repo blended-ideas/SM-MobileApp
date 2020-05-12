@@ -40,22 +40,20 @@ export class LoginPage implements OnInit {
         this.isLoggingIn = true;
         this.loginError.hasError = false;
         const {username, password} = this.loginForm.value;
-        this.authenticationService.login(username, password)
-            .pipe(delay(1000))
-            .subscribe((resp) => {
-                console.log(resp);
-                if (this.returnUrl) {
-                    this.router.navigateByUrl(this.returnUrl);
-                } else {
-                    this.router.navigate(['/dashboard']);
-                }
-                this.isLoggingIn = false;
-            }, errorResponse => {
-                console.log(errorResponse);
-                this.isLoggingIn = false;
-                this.loginError.hasError = true;
-                this.loginError.errorMessage = errorResponse.error.detail;
-            });
+        this.authenticationService.login(username, password).subscribe((resp) => {
+            console.log(resp);
+            if (this.returnUrl) {
+                this.router.navigateByUrl(this.returnUrl);
+            } else {
+                this.router.navigate(['/dashboard']);
+            }
+            this.isLoggingIn = false;
+        }, errorResponse => {
+            console.log(errorResponse);
+            this.isLoggingIn = false;
+            this.loginError.hasError = true;
+            this.loginError.errorMessage = errorResponse.error.detail;
+        });
     }
 
 }

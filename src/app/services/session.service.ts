@@ -36,7 +36,6 @@ export class SessionService {
     private _token: AuthTokenInterface;
 
     get token(): AuthTokenInterface {
-        console.log(this._token);
         if (!this._token) {
             console.log('in');
             Storage.get({key: this.TOKEN_KEY}).then(data => {
@@ -47,10 +46,11 @@ export class SessionService {
     }
 
     set token(token: AuthTokenInterface) {
-        Storage.set({key: this.TOKEN_KEY, value: JSON.stringify(this._token)}).then(data => {
-            this._token = token;
-        });
+        console.log(token);
+        Storage.set({key: this.TOKEN_KEY, value: JSON.stringify(token)});
+        this._token = token;
     }
+
 
     jwt_token_from_storage(): Promise<{ value: string | null }> {
         return Storage.get({key: this.TOKEN_KEY});
@@ -59,6 +59,7 @@ export class SessionService {
     async getItems() {
         this._user = JSON.parse((await Storage.get({key: this.USER_KEY})).value) as UserInterface;
         this._token = JSON.parse((await Storage.get({key: this.TOKEN_KEY})).value) || this.emptyToken;
+        console.log(this._token);
     }
 
     async clear(): Promise<void> {
