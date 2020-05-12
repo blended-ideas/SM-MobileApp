@@ -3,6 +3,7 @@ import {isPlatformBrowser} from '@angular/common';
 import {AuthTokenInterface} from '../interfaces/authToken.interface';
 import {UserInterface} from '../interfaces/user.interface';
 import {Plugins} from '@capacitor/core';
+import {Platform} from '@ionic/angular';
 
 const {Storage} = Plugins;
 
@@ -10,20 +11,15 @@ const {Storage} = Plugins;
     providedIn: 'root'
 })
 export class SessionService {
-    private readonly TOKEN_KEY: string = 'INVOICE101_TOKEN';
-    private readonly USER_KEY: string = 'INVOICE101_USER';
+    private readonly TOKEN_KEY: string = 'STORE_TOKEN';
+    private readonly USER_KEY: string = 'STORE_USER';
     private emptyToken: AuthTokenInterface = {
         access: null,
         refresh: null
     };
 
-    constructor(@Inject(PLATFORM_ID) private platformId: object) {
-        if (isPlatformBrowser(this.platformId)) {
-            this.getItems();
-        } else {
-            this._user = null;
-            this._token = this.emptyToken;
-        }
+    constructor(private platform: Platform) {
+        this.getItems();
     }
 
     private _user: UserInterface;
@@ -34,30 +30,30 @@ export class SessionService {
 
     set user(value: UserInterface) {
         this._user = value;
-        if (isPlatformBrowser(this.platformId)) {
-            Storage.set({key: this.USER_KEY, value: JSON.stringify(this._user)});
-        }
+        Storage.set({key: this.USER_KEY, value: JSON.stringify(this._user)});
     }
 
     private _token: AuthTokenInterface;
 
     get token(): AuthTokenInterface {
-        if (isPlatformBrowser(this.platformId)) {
-            if (!this._token) {
-                Storage.get({key: this.TOKEN_KEY}).then(data => {
-                    this._token = JSON.parse(data.value) || this.emptyToken;
-                });
-            }
-            return this._token;
+        console.log(this._token);
+        if (!this._token) {
+            console.log('in');
+            Storage.get({key: this.TOKEN_KEY}).then(data => {
+                this._token = JSON.parse(data.value) || this.emptyToken;
+            });
         }
-        return this.emptyToken;
+        return this._token;
     }
 
     set token(token: AuthTokenInterface) {
-        this._token = token;
-        if (isPlatformBrowser(this.platformId)) {
-            Storage.set({key: this.TOKEN_KEY, value: JSON.stringify(this._token)});
-        }
+        Storage.set({key: this.TOKEN_KEY, value: JSON.stringify(this._token)}).then(data => {
+            this._token = token;
+        });
+    }
+
+    jwt_token_from_storage(): Promise<{ value: string | null }> {
+        return Storage.get({key: this.TOKEN_KEY});
     }
 
     async getItems() {
@@ -70,10 +66,6 @@ export class SessionService {
         this._token = this.emptyToken;
         await Storage.clear();
     }
-
-    // async isLoggedIn(): Promise<boolean> {
-    //     return Boolean(this._token.access);
-    // }
 
     isLoggedIn(forceCheck: boolean): boolean | Promise<boolean> {
         if (forceCheck) {

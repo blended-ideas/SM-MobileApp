@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {delay} from 'rxjs/operators';
+import {SessionService} from '../../services/session.service';
 
 @Component({
     selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginPage implements OnInit {
     constructor(private fb: FormBuilder,
                 private authenticationService: AuthenticationService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private sessionService: SessionService) {
     }
 
     ngOnInit() {
@@ -37,11 +39,11 @@ export class LoginPage implements OnInit {
     login() {
         this.isLoggingIn = true;
         this.loginError.hasError = false;
-
         const {username, password} = this.loginForm.value;
         this.authenticationService.login(username, password)
             .pipe(delay(1000))
-            .subscribe(() => {
+            .subscribe((resp) => {
+                console.log(resp);
                 if (this.returnUrl) {
                     this.router.navigateByUrl(this.returnUrl);
                 } else {
@@ -49,6 +51,7 @@ export class LoginPage implements OnInit {
                 }
                 this.isLoggingIn = false;
             }, errorResponse => {
+                console.log(errorResponse);
                 this.isLoggingIn = false;
                 this.loginError.hasError = true;
                 this.loginError.errorMessage = errorResponse.error.detail;

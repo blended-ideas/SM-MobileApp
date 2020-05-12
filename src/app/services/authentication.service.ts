@@ -18,6 +18,7 @@ export class AuthenticationService {
                 private router: Router,
                 private sessionService: SessionService) {
         this.startAuthTokenRefresh();
+        this.autoLoginOnStart();
     }
 
     login(username: string, password: string): Observable<AuthTokenInterface> {
@@ -30,6 +31,7 @@ export class AuthenticationService {
                 this.loginSubject.next({type: 'login', data: true});
             }))
         ).pipe(map(responses => {
+            console.log(responses);
             return responses[0];
         }));
     }
@@ -48,6 +50,7 @@ export class AuthenticationService {
     }
 
     private startAuthTokenRefresh() {
+        console.log('inside');
         // Refresh Token every 5 minutes
         interval(5 * 60 * 1000).subscribe(() => {
             const token = this.sessionService.token;
@@ -60,7 +63,24 @@ export class AuthenticationService {
                         access: response.access,
                         refresh: token.refresh
                     };
+                    this.loginSubject.next({type: 'login', data: true});
                 });
+        });
+    }
+
+    private autoLoginOnStart() {
+        const token = this.sessionService.token;
+        console.log(token);
+        this.sessionService.jwt_token_from_storage().then(data => {
+            const refreshToken = data.value ? JSON.parse(data.value).refresh : null;
+            console.log(refreshToken);
+            if (refreshToken) {
+                return this.httpClient.post<AuthTokenInterface>(USER_APIS.refreshToken, {refresh: refreshToken})
+                    .subscribe(resp => {
+                        this.sessionService.token = resp;
+                        this.loginSubject.next({type: 'login', data: true});
+                    });
+            }
         });
     }
 }

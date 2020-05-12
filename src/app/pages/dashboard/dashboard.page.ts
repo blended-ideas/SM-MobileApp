@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {SessionService} from '../../services/session.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.page.html',
-  styleUrls: ['./dashboard.page.scss'],
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.page.html',
+    styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
 
-  constructor() { }
+    constructor(private sessionService: SessionService) {
 
-  ngOnInit() {
-  }
+    }
+
+    async ngOnInit() {
+        console.log(await this.sessionService.isLoggedIn(true));
+    }
 
 }

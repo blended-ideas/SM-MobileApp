@@ -35,6 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loginSubscription = this.authenticationService.getLoginSubscription().subscribe(response => {
+            console.log(response);
             if (response.type === 'login') {
                 this.initializeApp();
             }
@@ -42,7 +43,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     async initializeApp() {
-        console.log(await this.sessionService.isLoggedIn(true));
         this.isLoggedIn = await this.sessionService.isLoggedIn(true);
 
     }

@@ -7,13 +7,14 @@ const routes: Routes = [{
 },
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
     },
-  {
-    path: 'dashboard',
-    loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
-  },
+    {
+        path: 'dashboard',
+        loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardPageModule)
+    },
+    {path: '**', redirectTo: 'dashboard'}
 ];
 
 @NgModule({
