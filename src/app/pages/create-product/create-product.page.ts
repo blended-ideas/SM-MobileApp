@@ -1,6 +1,6 @@
 /* tslint:disable */
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SessionService} from '../../services/session.service';
 import {ProductInterface} from '../../interfaces/product.interface';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -23,6 +23,16 @@ export class CreateProductPage implements OnInit {
 
     faPlusSquare = faPlusSquare;
     faEdit = faEdit;
+    validation_messages = {
+        name: [],
+        category: [],
+        price: [],
+        landing_price: [],
+        distributor_margin: [],
+        retailer_margin: [],
+        stock: [],
+        barcode_entry: []
+    };
 
     constructor(private sessionService: SessionService,
                 private fb: FormBuilder,
@@ -46,7 +56,7 @@ export class CreateProductPage implements OnInit {
     createProduct() {
         this.utilService.presentLoading('Creating Product');
         this.isCreating = true;
-        const postObj = this.productForm.getRawValue();
+        const postObj = JSON.parse(JSON.stringify(this.productForm.value));
 
         let apiCall: Observable<ProductInterface>;
         const successMessage = `Product ${this.mode === 'Create' ? 'Created' : 'Edited'}`;
@@ -94,6 +104,45 @@ export class CreateProductPage implements OnInit {
             ]),
             is_active: [true]
         });
+        this.validation_messages = {
+            name: [
+                {type: 'required', message: 'Name is required.'},
+                {type: 'maxlength', message: 'Name cannot be more than 250 characters long.'},
+            ],
+            category: [
+                {type: 'maxlength', message: 'Category cannot be more than 250 characters long.'}
+            ],
+            price: [
+                {type: 'required', message: 'Price is required.'},
+                {type: 'max', message: 'Price cannot be more than 90000000.'},
+                {type: 'min', message: 'Minimum price is 0.'}
+            ],
+            landing_price: [
+                {type: 'required', message: 'Price is required.'},
+                {type: 'max', message: 'Price cannot be more than 90000000.'},
+                {type: 'min', message: 'Minimum price is 0.'}
+            ],
+            distributor_margin: [
+                {type: 'required', message: 'Shell Margin is required.'},
+                {type: 'max', message: 'Shell Margin cannot be more than 100.'},
+                {type: 'min', message: 'Minimum price is 0.'}
+            ],
+            retailer_margin: [
+                {type: 'required', message: 'Retail Margin is required.'},
+                {type: 'max', message: 'Retail Margin cannot be more than 100.'},
+                {type: 'min', message: 'Minimum price is 0.'}
+            ],
+            stock: [
+                {type: 'required', message: 'Stock is required.'},
+                {type: 'max', message: 'Stock cannot be more than 90000000.'},
+                {type: 'min', message: 'Minimum price is 0.'}
+            ],
+            barcode_entry: [
+                {type: 'required', message: 'Barcode is required.'},
+                {type: 'maxlength', message: 'Barcode cannot be more than 200 characters long.'}
+            ],
+
+        };
     }
 
     private fetchProduct(productId: string) {

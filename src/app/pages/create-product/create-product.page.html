@@ -13,15 +13,23 @@
 </ion-header>
 
 <ion-content>
-    <form #productForm="ngForm" *ngIf="productForm && !initialLoading">
+    <form [formGroup]="productForm" id="createProductForm" *ngIf="productForm && !initialLoading" [noValidate]="false">
         <ion-grid>
             <ion-row>
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Name</ion-label>
-                        <ion-input name="name" id="product_name" ngModel required maxlength="250"
+                        <ion-input class="form-control" formControlName="name" id="product_name"
                                    type="text" [placeholder]="'Product Name'"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.name">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('name').hasError(validation.type) && (productForm.get('name').dirty || productForm.get('name').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
             </ion-row>
 
@@ -29,9 +37,17 @@
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Category</ion-label>
-                        <ion-input ngModel name="category" id="product_category" maxlength="500"
+                        <ion-input class="form-control" formControlName="category" id="product_category"
                                    type="text" [placeholder]="'Category'"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.category">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('category').hasError(validation.type) && (productForm.get('category').dirty || productForm.get('category').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
             </ion-row>
 
@@ -39,17 +55,33 @@
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Landing Price</ion-label>
-                        <ion-input ngModel name="landing_price" id="landing_price" required max="90000000" min="0"
+                        <ion-input class="form-control" formControlName="landing_price" id="landing_price"
                                    type="number"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.landing_price">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('landing_price').hasError(validation.type) && (productForm.get('landing_price').dirty || productForm.get('landing_price').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
 
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Price(MRP)</ion-label>
-                        <ion-input ngModel name="price" id="price" max="90000000" min="0"
+                        <ion-input class="form-control" formControlName="price" id="price"
                                    type="number"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.price">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('price').hasError(validation.type) && (productForm.get('price').dirty || productForm.get('price').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
             </ion-row>
 
@@ -57,17 +89,33 @@
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Shell Margin</ion-label>
-                        <ion-input ngModel name="distributor_margin" id="distributor_margin" max="100" min="0"
+                        <ion-input class="form-control" formControlName="distributor_margin" id="distributor_margin"
                                    type="number"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.price">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('distributor_margin').hasError(validation.type) && (productForm.get('distributor_margin').dirty || productForm.get('distributor_margin').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
 
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Retailer Margin</ion-label>
-                        <ion-input ngModel name="retailer_margin" id="retailer_margin" max="100" min="0"
+                        <ion-input class="form-control" formControlName="retailer_margin" id="retailer_margin"
                                    type="number"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.price">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('retailer_margin').hasError(validation.type) && (productForm.get('retailer_margin').dirty || productForm.get('retailer_margin').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
             </ion-row>
 
@@ -75,17 +123,33 @@
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Stock</ion-label>
-                        <ion-input ngModel name="stock" id="stock" max="90000000" min="0"
+                        <ion-input class="form-control" formControlName="stock" id="stock"
                                    type="number"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.price">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('stock').hasError(validation.type) && (productForm.get('stock').dirty || productForm.get('stock').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
 
                 <ion-col>
                     <ion-item class="ion-no-padding form-group">
                         <ion-label [position]="'floating'">Barcode entry</ion-label>
-                        <ion-input ngModel name="barcode_entry" id="barcode_entry" max="200"
-                                   type="text"></ion-input>
+                        <ion-input class="form-control" formControlName="barcode_entry" id="barcode_entry"
+                                   type="number"></ion-input>
                     </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.barcode_entry">
+                            <div class="error-message"
+                                 *ngIf="productForm.get('barcode_entry').hasError(validation.type) && (productForm.get('barcode_entry').dirty || productForm.get('barcode_entry').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
                 </ion-col>
             </ion-row>
         </ion-grid>
