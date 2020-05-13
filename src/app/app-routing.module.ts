@@ -31,7 +31,11 @@ const routes: Routes = [
         path: 'change-password',
         loadChildren: () => import('./pages/change-password/change-password.module').then(m => m.ChangePasswordPageModule)
     },
-    {path: '**', redirectTo: '/dashboard'}
+    {
+        path: 'create-product',
+        loadChildren: () => import('./pages/create-product/create-product.module').then(m => m.CreateProductPageModule)
+    },
+    {path: '**', redirectTo: '/dashboard'},
 ];
 
 @NgModule({

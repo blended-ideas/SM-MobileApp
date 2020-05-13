@@ -18,6 +18,19 @@ export class ProductService {
             return this.httpClient.get<PaginatedResponseInterface<ProductInterface>>(link);
         }
         return this.httpClient.get<PaginatedResponseInterface<ProductInterface>>(PRODUCT_APIS.product, {params});
-
     }
+
+    getProductById(id: string): Observable<ProductInterface> {
+        return this.httpClient.get<ProductInterface>(`${PRODUCT_APIS.product}${id}/`);
+    }
+
+
+    createProducts(postObj: object): Observable<ProductInterface> {
+        return this.httpClient.post<ProductInterface>(PRODUCT_APIS.product, postObj);
+    }
+
+    updateProduct(id: string, patchObj: object): Observable<ProductInterface> {
+        return this.httpClient.patch<ProductInterface>(PRODUCT_APIS.product + id + '/', patchObj);
+    }
+
 }

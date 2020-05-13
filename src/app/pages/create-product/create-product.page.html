@@ -1,0 +1,94 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-back-button slot="start"></ion-back-button>
+        <ion-title>{{mode}} Product/Service</ion-title>
+        <ion-buttons slot="end">
+            <ion-button [size]="'small'" [fill]="'solid'" (click)="createProduct()">
+                <fa-icon [icon]="mode === 'Create' ? faPlusSquare: faEdit"></fa-icon>&nbsp;
+                {{mode}}
+            </ion-button>
+        </ion-buttons>
+
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form #productForm="ngForm" *ngIf="productForm && !initialLoading">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Name</ion-label>
+                        <ion-input name="name" id="product_name" ngModel required maxlength="250"
+                                   type="text" [placeholder]="'Product Name'"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Category</ion-label>
+                        <ion-input ngModel name="category" id="product_category" maxlength="500"
+                                   type="text" [placeholder]="'Category'"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Landing Price</ion-label>
+                        <ion-input ngModel name="landing_price" id="landing_price" required max="90000000" min="0"
+                                   type="number"></ion-input>
+                    </ion-item>
+                </ion-col>
+
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Price(MRP)</ion-label>
+                        <ion-input ngModel name="price" id="price" max="90000000" min="0"
+                                   type="number"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Shell Margin</ion-label>
+                        <ion-input ngModel name="distributor_margin" id="distributor_margin" max="100" min="0"
+                                   type="number"></ion-input>
+                    </ion-item>
+                </ion-col>
+
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Retailer Margin</ion-label>
+                        <ion-input ngModel name="retailer_margin" id="retailer_margin" max="100" min="0"
+                                   type="number"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Stock</ion-label>
+                        <ion-input ngModel name="stock" id="stock" max="90000000" min="0"
+                                   type="number"></ion-input>
+                    </ion-item>
+                </ion-col>
+
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Barcode entry</ion-label>
+                        <ion-input ngModel name="barcode_entry" id="barcode_entry" max="200"
+                                   type="text"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+
+</ion-content>

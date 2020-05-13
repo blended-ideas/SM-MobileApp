@@ -3,7 +3,8 @@
         <ion-back-button slot="start"></ion-back-button>
         <ion-title>Products/Service</ion-title>
         <ion-buttons slot="end">
-            <ion-button [size]="'small'" [fill]="'solid'">
+            <ion-button [size]="'small'" [fill]="'solid'" [routerDirection]="'forward'"
+                        [routerLink]="'/create-product'">
                 <fa-icon [icon]="faPlusSquare"></fa-icon>&nbsp;
                 Create
             </ion-button>
