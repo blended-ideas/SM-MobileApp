@@ -1,6 +1,6 @@
 {
   "appId": "in.blendedideas.sm",
-  "appName": "store-managment",
+  "appName": "store-management",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

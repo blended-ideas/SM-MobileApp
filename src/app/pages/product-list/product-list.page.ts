@@ -14,6 +14,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {SessionService} from '../../services/session.service';
 import {UtilService} from '../../services/util.service';
+import {AlertController, PopoverController} from '@ionic/angular';
+import {SortComponent} from '../../components/sort/sort.component';
 
 @Component({
     selector: 'app-product-list',
@@ -35,12 +37,14 @@ export class ProductListPage implements OnInit {
     searchText: string;
     isLoading: boolean;
     faPlusSquare = faPlusSquare;
+    selectedSortOption: string;
 
     constructor(private productService: ProductService,
                 private route: ActivatedRoute,
                 private sessionService: SessionService,
                 private router: Router,
-                private utilService: UtilService) {
+                private utilService: UtilService,
+                private popoverController: PopoverController) {
     }
 
     ngOnInit() {
@@ -77,16 +81,17 @@ export class ProductListPage implements OnInit {
             this.products = [];
         }
         let params = new HttpParams().set('page_size', '10');
+        console.log(queryParamMap);
         if (queryParamMap.has('search')) {
             this.searchText = queryParamMap.get('search');
             params = params.set('search', this.searchText);
         }
-
         if (queryParamMap.has('sort')) {
             const sortString = queryParamMap.get('sort');
             this.sortContext = this.sortValues.find(sv => sv.value === sortString);
         }
         this.sortContext = this.sortContext || this.sortValues[0];
+        console.log(this.sortContext.value, 'this.sortContext.value');
         params = params.set('ordering', this.sortContext.value);
         this.productService.getProducts(params, link).subscribe(response => {
             this.products = response.results;
@@ -99,4 +104,25 @@ export class ProductListPage implements OnInit {
         });
     }
 
+    onCancelSearch(ev) {
+        this.searchText = '';
+        this.changeQueryParam('search', this.searchText);
+    }
+
+    async showAlert() {
+        const popOver = await this.popoverController.create({
+            component: SortComponent,
+            componentProps: {
+                sortValues: this.sortValues
+            },
+            animated: true
+        });
+        await popOver.present();
+        await popOver.onDidDismiss().then(data => {
+            console.log(data);
+            if (data.data) {
+                this.changeQueryParam('sort', data.data.value);
+            }
+        });
+    }
 }

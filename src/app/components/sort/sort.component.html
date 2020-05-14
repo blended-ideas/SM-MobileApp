@@ -1,0 +1,8 @@
+<ion-content>
+    <ion-list>
+        <ion-item *ngFor="let sortValue of sortValues" (click)="sentSortValue(sortValue)">
+            {{sortValue.name}}&nbsp;
+            <fa-icon [icon]="sortValue.icon"></fa-icon>
+        </ion-item>
+    </ion-list>
+</ion-content>

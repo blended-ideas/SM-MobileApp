@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { CreateProductPageRoutingModule } from './create-product-routing.module';
+import {CreateProductPageRoutingModule} from './create-product-routing.module';
 
-import { CreateProductPage } from './create-product.page';
+import {CreateProductPage} from './create-product.page';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
@@ -16,8 +16,9 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
         IonicModule,
         CreateProductPageRoutingModule,
         ReactiveFormsModule,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-  declarations: [CreateProductPage]
+    declarations: [CreateProductPage],
 })
-export class CreateProductPageModule {}
+export class CreateProductPageModule {
+}

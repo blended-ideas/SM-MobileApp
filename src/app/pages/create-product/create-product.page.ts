@@ -8,6 +8,7 @@ import {ProductService} from '../../services/product.service';
 import {Observable} from 'rxjs';
 import {UtilService} from '../../services/util.service';
 import {faEdit, faPlusSquare} from '@fortawesome/free-solid-svg-icons';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 
 @Component({
     selector: 'app-create-product',
@@ -39,7 +40,8 @@ export class CreateProductPage implements OnInit {
                 private route: ActivatedRoute,
                 private productService: ProductService,
                 private router: Router,
-                private utilService: UtilService) {
+                private utilService: UtilService,
+                private barcodeScanner: BarcodeScanner) {
     }
 
     ngOnInit() {
@@ -75,6 +77,15 @@ export class CreateProductPage implements OnInit {
             this.utilService.presentToast('Something went wrong while creating the product/service', 2000);
             this.utilService.dismissLoading();
             this.isCreating = false;
+        });
+    }
+
+    scanBarCode() {
+        this.barcodeScanner.scan().then(barcodeData => {
+            console.log('Barcode data', barcodeData);
+            this.productForm.controls.barcode_entry.setValue(barcodeData);
+        }).catch(err => {
+            console.log('Error', err);
         });
     }
 
@@ -143,6 +154,7 @@ export class CreateProductPage implements OnInit {
             ],
 
         };
+        console.log(this.productForm.controls);
     }
 
     private fetchProduct(productId: string) {
@@ -153,6 +165,5 @@ export class CreateProductPage implements OnInit {
             this.buildForm();
         });
     }
-
 
 }
