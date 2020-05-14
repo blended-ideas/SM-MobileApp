@@ -40,6 +40,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/create-product/create-product.module').then(m => m.CreateProductPageModule)
     },
     {path: '**', redirectTo: '/dashboard'},
+  {
+    path: 'create-shift',
+    loadChildren: () => import('./pages/create-shift/create-shift.module').then( m => m.CreateShiftPageModule)
+  },
 ];
 
 @NgModule({

@@ -37,7 +37,6 @@ export class ProductListPage implements OnInit {
     searchText: string;
     isLoading: boolean;
     faPlusSquare = faPlusSquare;
-    selectedSortOption: string;
 
     constructor(private productService: ProductService,
                 private route: ActivatedRoute,
