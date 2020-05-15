@@ -6,25 +6,29 @@ import {SHIFT_APIS} from '../constants/api.constants';
 import {PaginatedResponseInterface} from '../interfaces/paginatedResponse.interface';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ShiftService {
 
-  constructor(private httpClient: HttpClient) {
-  }
-
-  getShifts(params?: HttpParams, link?: string): Observable<PaginatedResponseInterface<ShiftDetailInterface>> {
-    if (link) {
-      return this.httpClient.get<PaginatedResponseInterface<ShiftDetailInterface>>(link);
+    constructor(private httpClient: HttpClient) {
     }
-    return this.httpClient.get<PaginatedResponseInterface<ShiftDetailInterface>>(SHIFT_APIS.detail, {params});
-  }
 
-  createShift(postObj: object): Observable<ShiftDetailInterface> {
-    return this.httpClient.post<ShiftDetailInterface>(SHIFT_APIS.detail, postObj);
-  }
+    getShifts(params?: HttpParams, link?: string): Observable<PaginatedResponseInterface<ShiftDetailInterface>> {
+        if (link) {
+            return this.httpClient.get<PaginatedResponseInterface<ShiftDetailInterface>>(link);
+        }
+        return this.httpClient.get<PaginatedResponseInterface<ShiftDetailInterface>>(SHIFT_APIS.detail, {params});
+    }
 
-  getShiftById(id: string): Observable<ShiftDetailInterface> {
-    return this.httpClient.get<ShiftDetailInterface>(`${SHIFT_APIS.detail}${id}/`);
-  }
+    createShift(postObj: object): Observable<ShiftDetailInterface> {
+        return this.httpClient.post<ShiftDetailInterface>(SHIFT_APIS.detail, postObj);
+    }
+
+    updateShift(id: string, patchObj: object): Observable<ShiftDetailInterface> {
+        return this.httpClient.patch<ShiftDetailInterface>(SHIFT_APIS.detail + id + '/', patchObj);
+    }
+
+    getShiftById(id: string): Observable<ShiftDetailInterface> {
+        return this.httpClient.get<ShiftDetailInterface>(`${SHIFT_APIS.detail}${id}/`);
+    }
 }

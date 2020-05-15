@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content>
-    <form [formGroup]="shiftForm" id="createShiftForm">
+    <form *ngIf="shiftForm" [formGroup]="shiftForm" id="createShiftForm">
         <ion-grid>
             <ion-row>
                 <ion-col>
@@ -63,22 +63,34 @@
             </ion-row>
         </ion-grid>
         <hr/>
-        <ion-card>
+    </form>
+    <form #entryForm="ngForm">
+        <ion-card *ngIf="selectedProducts?.length > 0">
             <ion-card-header>Products Sold</ion-card-header>
             <ion-card-content>
                 <ion-list>
-                    <ion-row>
-                        <ion-col size="10">
-                            <ion-item>
-                                <ion-label></ion-label>
-                                <ion-input type="number"></ion-input>
-                            </ion-item>
-                        </ion-col>
-                        <ion-col size="2"></ion-col>
-                    </ion-row>
-                    <ion-item>
-
-                    </ion-item>
+                    <div *ngFor="let prod of selectedProducts">
+                        <ion-row class="ion-no-padding">
+                            <ion-col class="ion-no-padding" size="10"><h2>{{prod.name}}</h2></ion-col>
+                            <ion-col class="ion-no-padding ion-text-right" size="2">
+                                <fa-icon [icon]="faTimesCircle" (click)="removeProductFromList(prod)"></fa-icon>
+                            </ion-col>
+                        </ion-row>
+                        <ion-item class="ion-no-padding">
+                            <ion-label>Quantity:</ion-label>
+                            <ion-input type="number" [(ngModel)]="prod.quantity" name="prod.quantity" min="1"
+                                       [max]="prod.stock" [placeholder]="'Enter quantity'" required
+                                       #qty=ngModel></ion-input>
+                        </ion-item>
+                        <span *ngIf="qty.errors">
+                        <span [hidden]="!qty.errors.required">
+                            <small style="color: red">Quantity is Required</small>
+                        </span>
+                    </span>
+                        <div *ngIf="prod.quantity > prod.stock">
+                            <small style="color: red">Quantity cannot exceed stock</small>
+                        </div>
+                    </div>
                 </ion-list>
             </ion-card-content>
         </ion-card>

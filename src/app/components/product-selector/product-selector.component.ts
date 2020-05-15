@@ -12,7 +12,7 @@ import {UtilService} from '../../services/util.service';
     styleUrls: ['./product-selector.component.scss'],
 })
 export class ProductSelectorComponent implements OnInit {
-    @Input() selectedProducts: ProductInterface[] = [];
+    @Input() selectedProducts: { name: string, id: string, quantity: number, checked?: boolean }[] = [];
     isLoading: boolean;
     products: ProductInterface[] = [];
     searchText: string;
@@ -24,6 +24,7 @@ export class ProductSelectorComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log(this.selectedProducts);
         this.fetchProducts(true);
     }
 
@@ -42,7 +43,9 @@ export class ProductSelectorComponent implements OnInit {
             this.products.map(p => p.checked = false);
             if (this.selectedProducts.length > 0) {
                 this.selectedProducts.forEach((sp) => {
+                    console.log(sp.id);
                     const prd = this.products.find(p => p.id === sp.id);
+                    console.log(prd);
                     if (prd) {
                         prd.checked = true;
                     }
@@ -65,7 +68,14 @@ export class ProductSelectorComponent implements OnInit {
 
 
     dismiss(boolVal) {
-        boolVal ? this.modalController.dismiss({selectedProducts: this.products.filter(p => p.checked)}) : this.modalController.dismiss();
+        boolVal ? this.modalController.dismiss({
+            selectedProducts: this.products.filter(p => p.checked).map(sp => ({
+                id: sp.id,
+                quantity: sp.quantity,
+                name: sp.name,
+                checked: sp.checked
+            }))
+        }) : this.modalController.dismiss();
     }
 
 
