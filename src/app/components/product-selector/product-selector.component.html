@@ -1,0 +1,25 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button [size]="'small'" (click)="dismiss(false)">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Select Product</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-list>
+        <ion-item *ngFor="let product of products">
+            <ion-label>
+                <h2>{{product.name}} | {{product.category}}</h2>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" *ngIf="next">
+        <ion-infinite-scroll-content
+                [loadingSpinner]="'bubbles'"
+                [loadingText]="'Loading more products...'">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>

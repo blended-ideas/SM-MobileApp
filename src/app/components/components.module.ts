@@ -3,10 +3,12 @@ import {IonicModule} from '@ionic/angular';
 import {CommonModule} from '@angular/common';
 import {SortComponent} from './sort/sort.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {ProductSelectorComponent} from './product-selector/product-selector.component';
 
 @NgModule({
     declarations: [
-        SortComponent
+        SortComponent,
+        ProductSelectorComponent
     ],
     imports: [
         CommonModule,

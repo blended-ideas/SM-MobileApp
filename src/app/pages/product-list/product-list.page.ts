@@ -37,6 +37,8 @@ export class ProductListPage implements OnInit {
     searchText: string;
     isLoading: boolean;
     faPlusSquare = faPlusSquare;
+    queryMap: any;
+    next: string;
 
     constructor(private productService: ProductService,
                 private route: ActivatedRoute,
@@ -48,6 +50,7 @@ export class ProductListPage implements OnInit {
 
     ngOnInit() {
         this.route.queryParamMap.subscribe(queryParamMap => {
+            this.queryMap = queryParamMap;
             this.fetchProducts(true, null, queryParamMap);
         });
         this.viewEdit = this.sessionService.isAdmin() || this.sessionService.isAuditor();
@@ -93,11 +96,18 @@ export class ProductListPage implements OnInit {
         console.log(this.sortContext.value, 'this.sortContext.value');
         params = params.set('ordering', this.sortContext.value);
         this.productService.getProducts(params, link).subscribe(response => {
-            this.products = response.results;
+            this.products = this.products.concat(...response.results);
+            this.next = response.next;
             console.log(this.products);
+            if (infiniteScroll) {
+                infiniteScroll.target.complete();
+            }
             this.isLoading = false;
             this.utilService.dismissLoading();
         }, () => {
+            if (infiniteScroll) {
+                infiniteScroll.target.complete();
+            }
             this.utilService.dismissLoading();
             this.isLoading = false;
         });
@@ -123,5 +133,9 @@ export class ProductListPage implements OnInit {
                 this.changeQueryParam('sort', data.data.value);
             }
         });
+    }
+
+    doInfiniteScroll(infiniteScroll) {
+        this.fetchProducts(false, this.next, this.queryMap, infiniteScroll);
     }
 }

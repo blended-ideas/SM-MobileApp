@@ -1,0 +1,65 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-back-button slot="start"></ion-back-button>
+        <ion-title>{{mode}} Product/Service</ion-title>
+        <ion-buttons slot="end">
+            <ion-button [size]="'small'" [fill]="'solid'" (click)="createShift()" type="submit">
+                <fa-icon [icon]="mode === 'Create' ? faPlusSquare: faEdit"></fa-icon>&nbsp;
+                {{mode}}
+            </ion-button>
+        </ion-buttons>
+
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="shiftForm" id="createShiftForm">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label>Shift Start</ion-label>
+                        <ion-datetime displayFormat="DD/MM/YYYY hh:mm a" name="start_date"
+                                      formControlName="start_date"
+                                      [max]="today">
+                        </ion-datetime>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validationMessages.start_date">
+                            <div class="error-message"
+                                 *ngIf="shiftForm.get('start_date').hasError(validation.type) && (shiftForm.get('start_date').dirty || shiftForm.get('start_date').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label>Shift End</ion-label>
+                        <ion-datetime displayFormat="DD/MM/YYYY hh:mm a" name="end_date"
+                                      formControlName="end_date"
+                                      [max]="today">
+                        </ion-datetime>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validationMessages.end_date">
+                            <div class="error-message"
+                                 *ngIf="shiftForm.get('end_date').hasError(validation.type) && (shiftForm.get('end_date').dirty || shiftForm.get('end_date').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <div class="ion-text-center">
+                    <ion-button size="small" (click)="selectProducts()">Select Product</ion-button>
+                </div>
+            </ion-row>
+        </ion-grid>
+    </form>
+
+</ion-content>

@@ -39,11 +39,15 @@ const routes: Routes = [
         path: 'create-product/:productId',
         loadChildren: () => import('./pages/create-product/create-product.module').then(m => m.CreateProductPageModule)
     },
+    {
+        path: 'create-shift',
+        loadChildren: () => import('./pages/create-shift/create-shift.module').then(m => m.CreateShiftPageModule)
+    },
+    {
+        path: 'create-shift/:shiftId',
+        loadChildren: () => import('./pages/create-shift/create-shift.module').then(m => m.CreateShiftPageModule)
+    },
     {path: '**', redirectTo: '/dashboard'},
-  {
-    path: 'create-shift',
-    loadChildren: () => import('./pages/create-shift/create-shift.module').then( m => m.CreateShiftPageModule)
-  },
 ];
 
 @NgModule({

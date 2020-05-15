@@ -56,6 +56,10 @@ export class CreateProductPage implements OnInit {
     }
 
     createProduct() {
+        this.productForm.markAllAsTouched();
+        if (this.productForm.invalid) {
+            return;
+        }
         this.utilService.presentLoading('Creating Product');
         this.isCreating = true;
         const postObj = JSON.parse(JSON.stringify(this.productForm.value));
@@ -121,7 +125,7 @@ export class CreateProductPage implements OnInit {
                 {type: 'maxlength', message: 'Name cannot be more than 250 characters long.'},
             ],
             category: [
-                {type: 'maxlength', message: 'Category cannot be more than 250 characters long.'}
+                {type: 'maxlength', message: 'Category cannot be more than 500 characters long.'}
             ],
             price: [
                 {type: 'required', message: 'Price is required.'},
@@ -129,7 +133,7 @@ export class CreateProductPage implements OnInit {
                 {type: 'min', message: 'Minimum price is 0.'}
             ],
             landing_price: [
-                {type: 'required', message: 'Price is required.'},
+                {type: 'required', message: 'Landing Price is required.'},
                 {type: 'max', message: 'Price cannot be more than 90000000.'},
                 {type: 'min', message: 'Minimum price is 0.'}
             ],

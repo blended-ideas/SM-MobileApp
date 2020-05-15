@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content>
-    <form [formGroup]="productForm" id="createProductForm" *ngIf="productForm && !initialLoading" [noValidate]="false">
+    <form [formGroup]="productForm" id="createProductForm" *ngIf="productForm && !initialLoading">
         <ion-grid>
             <ion-row>
                 <ion-col>
@@ -93,7 +93,7 @@
                                    type="number"></ion-input>
                     </ion-item>
                     <div class="validation-errors">
-                        <ng-container *ngFor="let validation of validation_messages.price">
+                        <ng-container *ngFor="let validation of validation_messages.distributor_margin">
                             <div class="error-message"
                                  *ngIf="productForm.get('distributor_margin').hasError(validation.type) && (productForm.get('distributor_margin').dirty || productForm.get('distributor_margin').touched)">
                                 {{ validation.message }}
@@ -109,7 +109,7 @@
                                    type="number"></ion-input>
                     </ion-item>
                     <div class="validation-errors">
-                        <ng-container *ngFor="let validation of validation_messages.price">
+                        <ng-container *ngFor="let validation of validation_messages.retailer_margin">
                             <div class="error-message"
                                  *ngIf="productForm.get('retailer_margin').hasError(validation.type) && (productForm.get('retailer_margin').dirty || productForm.get('retailer_margin').touched)">
                                 {{ validation.message }}
@@ -127,7 +127,7 @@
                                    type="number"></ion-input>
                     </ion-item>
                     <div class="validation-errors">
-                        <ng-container *ngFor="let validation of validation_messages.price">
+                        <ng-container *ngFor="let validation of validation_messages.stock">
                             <div class="error-message"
                                  *ngIf="productForm.get('stock').hasError(validation.type) && (productForm.get('stock').dirty || productForm.get('stock').touched)">
                                 {{ validation.message }}

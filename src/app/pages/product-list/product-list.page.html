@@ -48,5 +48,11 @@
             </ion-item-divider>
         </div>
     </ion-list>
+    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" *ngIf="next">
+        <ion-infinite-scroll-content
+                [loadingSpinner]="'bubbles'"
+                [loadingText]="'Loading more products...'">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
 </ion-content>
