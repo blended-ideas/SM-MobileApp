@@ -25,7 +25,7 @@ export class CreateShiftPage implements OnInit {
         end_time: [],
         entries: [],
     };
-    selectedProducts: ProductInterface[];
+    selectedProducts: ProductInterface[] = [];
 
     constructor(private fb: FormBuilder,
                 private modalController: ModalController) {
@@ -59,7 +59,10 @@ export class CreateShiftPage implements OnInit {
         });
         await modal.present();
         await modal.onDidDismiss().then(data => {
-            this.selectedProducts = data.data.selectedProducts;
+            console.log(data.data.selectedProducts);
+            if (data.data) {
+                this.selectedProducts = data.data.selectedProducts;
+            }
         });
     }
 

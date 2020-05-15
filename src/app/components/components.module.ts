@@ -4,6 +4,7 @@ import {CommonModule} from '@angular/common';
 import {SortComponent} from './sort/sort.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {ProductSelectorComponent} from './product-selector/product-selector.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -13,7 +14,8 @@ import {ProductSelectorComponent} from './product-selector/product-selector.comp
     imports: [
         CommonModule,
         IonicModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        FormsModule
     ],
     exports: [],
     entryComponents: [],

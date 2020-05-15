@@ -12,9 +12,9 @@ import {UtilService} from '../../services/util.service';
     styleUrls: ['./product-selector.component.scss'],
 })
 export class ProductSelectorComponent implements OnInit {
-    @Input() selectedProducts: ProductInterface[];
+    @Input() selectedProducts: ProductInterface[] = [];
     isLoading: boolean;
-    products: ProductInterface[];
+    products: ProductInterface[] = [];
     searchText: string;
     next: string;
 
@@ -39,8 +39,16 @@ export class ProductSelectorComponent implements OnInit {
         }
         this.productService.getProducts(params, link).subscribe(response => {
             this.products = this.products.concat(...response.results);
+            this.products.map(p => p.checked = false);
+            if (this.selectedProducts.length > 0) {
+                this.selectedProducts.forEach((sp) => {
+                    const prd = this.products.find(p => p.id === sp.id);
+                    if (prd) {
+                        prd.checked = true;
+                    }
+                });
+            }
             this.next = response.next;
-            console.log(this.products);
             if (infiniteScroll) {
                 infiniteScroll.target.complete();
             }
@@ -57,7 +65,7 @@ export class ProductSelectorComponent implements OnInit {
 
 
     dismiss(boolVal) {
-        boolVal ? this.modalController.dismiss({selectedProducts: this.selectedProducts}) : this.modalController.dismiss();
+        boolVal ? this.modalController.dismiss({selectedProducts: this.products.filter(p => p.checked)}) : this.modalController.dismiss();
     }
 
 
