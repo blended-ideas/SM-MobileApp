@@ -17,7 +17,7 @@
             </ion-col>
             <ion-col size="10">
                 <ion-searchbar [debounce]="500"
-                               (ionChange)="changeQueryParam('search', searchText)"
+                               (ionChange)="fetchProducts(true)"
                                [(ngModel)]="searchText"
                                (ionCancel)="onCancelSearch($event)"
                                [searchIcon]="'Search'"
@@ -30,7 +30,7 @@
 
 <ion-content>
     <ion-list>
-        <div *ngFor="let product of products">
+        <ion-card *ngFor="let product of products">
             <ion-item>
                 <ion-label>
                     <h2>{{product.name}}</h2>
@@ -48,7 +48,7 @@
                             [routerLink]="['/view-product', product.id]">View
                 </ion-button>
             </ion-item-divider>
-        </div>
+        </ion-card>
     </ion-list>
     <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" *ngIf="next">
         <ion-infinite-scroll-content

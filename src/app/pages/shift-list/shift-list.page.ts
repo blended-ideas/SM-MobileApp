@@ -27,6 +27,7 @@ export class ShiftListPage implements OnInit {
     ];
     isLoading: boolean;
     next: string;
+    sort: string;
     shifts: ShiftDetailInterface[] = [];
     queryMap: any;
 
@@ -38,59 +39,31 @@ export class ShiftListPage implements OnInit {
     }
 
     ngOnInit() {
-        this.route.queryParamMap.subscribe(queryParamMap => {
-            this.queryMap = queryParamMap;
-            this.fetchShifts(true, null, queryParamMap);
-        });
+        this.fetchShifts(true, null);
     }
 
-    changeQueryParam(paramType: 'search' | 'sort', paramValue: string | number) {
-        const queryParams = {
-            sort: this.sortContext.value,
-            search: this.searchText
-        };
-        switch (paramType) {
-            case 'search':
-                queryParams.search = paramValue as string;
-                break;
-            case 'sort':
-                queryParams.sort = paramValue as string;
-                break;
-        }
-        this.router.navigate(['.'], {
-            relativeTo: this.route,
-            queryParamsHandling: 'merge',
-            queryParams
-        });
-    }
-
-    fetchShifts(emptyArray?: boolean, link?: string, queryParamMap?: ParamMap, infiniteScroll?: any) {
+    fetchShifts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
         this.isLoading = true;
         this.utilService.presentLoading('Loading Products...');
         if (emptyArray) {
             this.shifts = [];
         }
         let params = new HttpParams().set('page_size', '2');
-        console.log(queryParamMap);
-        if (queryParamMap.has('search')) {
-            this.searchText = queryParamMap.get('search');
+        if (this.searchText) {
             params = params.set('search', this.searchText);
         }
-        if (queryParamMap.has('sort')) {
-            const sortString = queryParamMap.get('sort');
-            this.sortContext = this.sortValues.find(sv => sv.value === sortString);
+        if (this.sort) {
+            this.sortContext = this.sortValues.find(sv => sv.value === this.sort);
         }
         this.sortContext = this.sortContext || this.sortValues[0];
-        console.log(this.sortContext.value, 'this.sortContext.value');
         params = params.set('ordering', this.sortContext.value);
         this.shiftService.getShifts(params, link).subscribe(response => {
-            this.shifts = this.shifts.concat(...response.results);
+            this.shifts = this.shifts.concat(response.results);
             this.next = response.next;
             console.log(this.next);
             this.isLoading = false;
             this.utilService.dismissLoading();
             if (infiniteScroll) {
-                console.log(infiniteScroll);
                 infiniteScroll.target.complete();
             }
         }, () => {
@@ -104,7 +77,6 @@ export class ShiftListPage implements OnInit {
 
     onCancelSearch(ev) {
         this.searchText = '';
-        this.changeQueryParam('search', this.searchText);
     }
 
     async showAlert() {
@@ -119,13 +91,13 @@ export class ShiftListPage implements OnInit {
         await popOver.onDidDismiss().then(data => {
             console.log(data);
             if (data.data) {
-                this.changeQueryParam('sort', data.data.value);
+                this.sort = data.data.value;
+                this.fetchShifts(true);
             }
         });
     }
 
     doInfiniteScroll(infiniteScroll) {
-        console.log(infiniteScroll);
-        this.fetchShifts(false, this.next, this.queryMap, infiniteScroll);
+        this.fetchShifts(false, this.next, infiniteScroll);
     }
 }

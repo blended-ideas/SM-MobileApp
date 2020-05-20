@@ -5,11 +5,15 @@ import {SortComponent} from './sort/sort.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {ProductSelectorComponent} from './product-selector/product-selector.component';
 import {FormsModule} from '@angular/forms';
+import {StockChangeListComponent} from './stock-change-list/stock-change-list.component';
+import {StockUpdatePopOverComponent} from './stock-update-pop-over/stock-update-pop-over.component';
 
 @NgModule({
     declarations: [
         SortComponent,
-        ProductSelectorComponent
+        ProductSelectorComponent,
+        StockChangeListComponent,
+        StockUpdatePopOverComponent
     ],
     imports: [
         CommonModule,

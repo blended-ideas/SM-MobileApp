@@ -17,7 +17,7 @@
             </ion-col>
             <ion-col size="10">
                 <ion-searchbar [debounce]="500"
-                               (ionChange)="changeQueryParam('search', searchText)"
+                               (ionChange)="fetchShifts(true)"
                                [(ngModel)]="searchText"
                                (ionCancel)="onCancelSearch($event)"
                                [searchIcon]="'Search'"
@@ -58,7 +58,7 @@
             </ion-item-divider>
         </ion-card>
     </ion-list>
-    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" >
+    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" [disabled]="!next">
         <ion-infinite-scroll-content
                 [loadingSpinner]="'bubbles'"
                 [loadingText]="'Loading more shifts...'">

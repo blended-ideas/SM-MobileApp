@@ -7,6 +7,44 @@
 
 <ion-content *ngIf="product">
     <ion-grid>
-
+        <h2 class="ion-no-margin" style="padding-left: 8px">{{product.name}}</h2>
+        <ion-row style="margin-top: 5px">
+            <ion-col size="5"><strong>Category:</strong></ion-col>
+            <ion-col size="7">{{product.category}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Landing Price:</strong></ion-col>
+            <ion-col size="7">{{product.landing_price|inr}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Price(MRP):</strong></ion-col>
+            <ion-col size="7">{{product.price|inr}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Shell Margin:</strong></ion-col>
+            <ion-col size="7">{{product.distributor_margin}}%</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Retailer Margin:</strong></ion-col>
+            <ion-col size="7">{{product.retailer_margin}}%</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Current Stock:</strong></ion-col>
+            <ion-col size="7">{{product.stock}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Barcode Entry:</strong></ion-col>
+            <ion-col size="7">{{product.barcode_entry}}</ion-col>
+        </ion-row>
     </ion-grid>
 </ion-content>
+<ion-footer>
+    <ion-row>
+        <ion-col [size]="6" class="ion-no-padding">
+            <ion-button [expand]="'full'" [size]="'small'" (click)="openStockChangesModal()">Stock Changes</ion-button>
+        </ion-col>
+        <ion-col [size]="6" class="ion-no-padding">
+            <ion-button [expand]="'full'" [size]="'small'">Upcoming Expiry Dates</ion-button>
+        </ion-col>
+    </ion-row>
+</ion-footer>

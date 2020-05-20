@@ -4,6 +4,8 @@ import {ProductService} from '../../services/product.service';
 import {UtilService} from '../../services/util.service';
 import {ProductInterface} from '../../interfaces/product.interface';
 import {HttpParams} from '@angular/common/http';
+import {ModalController} from '@ionic/angular';
+import {StockChangeListComponent} from '../../components/stock-change-list/stock-change-list.component';
 
 @Component({
     selector: 'app-view-product',
@@ -15,7 +17,8 @@ export class ViewProductPage implements OnInit {
 
     constructor(private route: ActivatedRoute,
                 private productService: ProductService,
-                private utilService: UtilService) {
+                private utilService: UtilService,
+                private modalController: ModalController) {
     }
 
     ngOnInit() {
@@ -36,19 +39,10 @@ export class ViewProductPage implements OnInit {
         });
     }
 
-    // getProductStockChanges() {
-    //     const params = new HttpParams()
-    //         .set('product', this.product.id)
-    //         .set('page', this.productStockChangePaginationHelper.currentPage.toString())
-    //         .set('page_size', this.productStockChangePaginationHelper.pageSize.toString());
-    //     this.productStockChangeLoading = true;
-    //     this.productService.getProductStockChanges(params).subscribe(response => {
-    //         this.productStockChangeLoading = false;
-    //         this.productStockChanges = response.results;
-    //         this.productStockChangePaginationHelper.totalSize = response.count;
-    //     }, () => {
-    //         this.productStockChangeLoading = false;
-    //     });
-    // }
+    openStockChangesModal() {
+        const modal = this.modalController.create({
+            component: StockChangeListComponent
+        });
+    }
 
 }
