@@ -3,7 +3,8 @@
         <ion-back-button slot="start"></ion-back-button>
         <ion-title>{{mode}} Product/Service</ion-title>
         <ion-buttons slot="end">
-            <ion-button [size]="'small'" [fill]="'solid'" (click)="createShift()" type="submit">
+            <ion-button [size]="'small'" [fill]="'solid'" (click)="createShift()" type="submit"
+                        [disabled]="entryForm?.invalid || disableButton">
                 <fa-icon [icon]="mode === 'Create' ? faPlusSquare: faEdit"></fa-icon>&nbsp;
                 {{mode}}
             </ion-button>
@@ -69,18 +70,19 @@
             <ion-card-header>Products Sold</ion-card-header>
             <ion-card-content>
                 <ion-list>
-                    <div *ngFor="let prod of selectedProducts">
+                    <div *ngFor="let prod of selectedProducts; let i=index">
                         <ion-row class="ion-no-padding">
                             <ion-col class="ion-no-padding" size="10"><h2>{{prod.name}}</h2></ion-col>
-                            <ion-col class="ion-no-padding ion-text-right" size="2">
+                            <ion-col class="ion-no-padding ion-text-right" size="2" *ngIf="prod.condition === 'NEW'">
                                 <fa-icon [icon]="faTimesCircle" (click)="removeProductFromList(prod)"></fa-icon>
                             </ion-col>
                         </ion-row>
                         <ion-item class="ion-no-padding">
                             <ion-label>Quantity:</ion-label>
-                            <ion-input type="number" [(ngModel)]="prod.quantity" name="prod.quantity" min="1"
-                                       [max]="prod.stock" [placeholder]="'Enter quantity'" required
-                                       #qty=ngModel></ion-input>
+                            <ion-input type="number" [(ngModel)]="prod.quantity" name="quantity{{i}}" [min]="0"
+                                       [max]="prod.stock + prod.quantity" [placeholder]="'Enter quantity'" required
+                                       (ngModelChange)="disableButton = prod.quantity > prod.stock"
+                                       #qty="ngModel"></ion-input>
                         </ion-item>
                         <span *ngIf="qty.errors">
                         <span [hidden]="!qty.errors.required">

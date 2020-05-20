@@ -30,8 +30,9 @@ export class CreateShiftPage implements OnInit {
         end_time: [],
         entries: [],
     };
-    selectedProducts: { name: string, id: string, quantity: number, checked?: boolean }[] = [];
+    selectedProducts: { id?: string, name: string, product: string, quantity: number, checked?: boolean, stock: number, condition: string }[] = [];
     @ViewChild('entryForm', {static: false}) entryForm: NgForm;
+    disableButton: boolean;
 
     constructor(private fb: FormBuilder,
                 private modalController: ModalController,
@@ -65,10 +66,18 @@ export class CreateShiftPage implements OnInit {
 
     buildForm() {
         this.shiftForm = this.fb.group({
-            start_date: [this.shift.start_dt ? this.shift.start_dt : this.today, Validators.required],
-            end_date: [this.shift.end_dt ? this.shift.end_dt : this.today, Validators.required],
+            start_date: [this.shift && this.shift.start_dt ? this.shift.start_dt : this.today, Validators.required],
+            end_date: [this.shift && this.shift.end_dt ? this.shift.end_dt : this.today, Validators.required],
         });
-        this.selectedProducts = this.shift.entries.map(e => ({name: e.product_name, id: e.product, quantity: e.quantity, checked: true}));
+        this.selectedProducts = this.shift && this.shift.entries.length !== 0 ? this.shift.entries.map(e => ({
+            id: e.id,
+            name: e.product_name,
+            product: e.product,
+            quantity: e.quantity,
+            checked: true,
+            stock: e.product_available_stock,
+            condition: 'EDIT'
+        })) : [];
     }
 
     createShift() {
@@ -77,6 +86,7 @@ export class CreateShiftPage implements OnInit {
             this.utilService.presentToast('Fill all the required fields', 3000);
             return;
         }
+        console.log(this.entryForm);
         if (this.entryForm.invalid) {
             this.utilService.presentToast('Fill all the required fields', 3000);
             return;
@@ -95,16 +105,15 @@ export class CreateShiftPage implements OnInit {
             return;
         }
         console.log(this.selectedProducts);
-        console.log(this.selectedProducts.map(p => ({product: p.id, quantity: p.quantity})));
-        const postObj = {
-            user: this.sessionService.user.id,
-            start_dt: formValue.start_date,
-            end_dt: formValue.end_date,
-            entries: this.selectedProducts.map(p => ({product: p.id, quantity: p.quantity}))
-        };
-
+        console.log(this.selectedProducts.map(p => ({product: p.product, quantity: p.quantity})));
         this.utilService.presentLoading(this.mode === 'Create' ? 'Creating shift' : 'Saving shift');
         if (this.mode === 'Create') {
+            const postObj = {
+                user: this.sessionService.user.id,
+                start_dt: formValue.start_date,
+                end_dt: formValue.end_date,
+                entries: this.selectedProducts.map(p => ({product: p.product, quantity: p.quantity}))
+            };
             this.shiftService.createShift(postObj).subscribe(response => {
                 this.utilService.presentToast('Shift Created Successfully', 2000);
                 this.utilService.dismissLoading();
@@ -113,7 +122,18 @@ export class CreateShiftPage implements OnInit {
                 this.utilService.dismissLoading();
             });
         } else {
-            this.shiftService.updateShift(this.shift.id, postObj).subscribe(response => {
+            const patchObj = {
+                start_dt: formValue.start_date,
+                end_dt: formValue.end_date,
+                entries: this.selectedProducts.map(p => ({
+                    id: p.id,
+                    product: p.product,
+                    quantity: p.quantity,
+                    product_name: p.name,
+                    condition: p.condition
+                }))
+            };
+            this.shiftService.updateShift(this.shift.id, patchObj).subscribe(response => {
                 this.utilService.presentToast('Shift Updated Successfully', 2000);
                 this.utilService.dismissLoading();
                 this.router.navigate(['/shift']);
@@ -133,9 +153,9 @@ export class CreateShiftPage implements OnInit {
         });
         await modal.present();
         await modal.onDidDismiss().then(data => {
-            console.log(data.data.selectedProducts);
+            console.log(data.data);
             if (data.data) {
-                this.selectedProducts = this.selectedProducts.concat(...data.data.selectedProducts);
+                this.selectedProducts = data.data;
             }
         });
     }

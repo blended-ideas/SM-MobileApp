@@ -12,7 +12,7 @@ import {UtilService} from '../../services/util.service';
     styleUrls: ['./product-selector.component.scss'],
 })
 export class ProductSelectorComponent implements OnInit {
-    @Input() selectedProducts: { name: string, id: string, quantity: number, checked?: boolean }[] = [];
+    @Input() selectedProducts: { id?: string, name: string, product: string, quantity: number, checked?: boolean, stock: number, condition: string }[] = [];
     isLoading: boolean;
     products: ProductInterface[] = [];
     searchText: string;
@@ -40,17 +40,20 @@ export class ProductSelectorComponent implements OnInit {
         }
         this.productService.getProducts(params, link).subscribe(response => {
             this.products = this.products.concat(...response.results);
-            this.products.map(p => p.checked = false);
+            this.products.map((p) => {
+                p.checked = false;
+                p.condition = 'NEW';
+            });
             if (this.selectedProducts.length > 0) {
                 this.selectedProducts.forEach((sp) => {
-                    console.log(sp.id);
-                    const prd = this.products.find(p => p.id === sp.id);
-                    console.log(prd);
+                    const prd = this.products.find(p => p.id === sp.product);
                     if (prd) {
                         prd.checked = true;
+                        prd.condition = 'EDIT';
                     }
                 });
             }
+            console.log(this.products);
             this.next = response.next;
             if (infiniteScroll) {
                 infiniteScroll.target.complete();
@@ -68,14 +71,20 @@ export class ProductSelectorComponent implements OnInit {
 
 
     dismiss(boolVal) {
-        boolVal ? this.modalController.dismiss({
-            selectedProducts: this.products.filter(p => p.checked).map(sp => ({
-                id: sp.id,
+        const prds = this.products.filter(p => p.checked && p.condition !== 'EDIT') || [];
+        console.log(prds);
+        if (prds.length > 0) {
+            this.selectedProducts = this.selectedProducts.concat(...prds.map(sp => ({
+                product: sp.id,
                 quantity: sp.quantity,
                 name: sp.name,
-                checked: sp.checked
-            }))
-        }) : this.modalController.dismiss();
+                checked: sp.checked,
+                stock: sp.stock,
+                condition: 'NEW'
+            })));
+        }
+        console.log(this.selectedProducts);
+        boolVal ? this.modalController.dismiss(this.selectedProducts) : this.modalController.dismiss();
     }
 
 

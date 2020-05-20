@@ -16,6 +16,7 @@ export interface ProductInterface {
     is_active: boolean;
     checked: boolean;
     quantity?: number;
+    condition?: string;
 }
 
 export interface ProductStockChangeInterface {

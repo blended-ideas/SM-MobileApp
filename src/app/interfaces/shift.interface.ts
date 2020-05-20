@@ -5,6 +5,7 @@ export interface ShiftEntryInterface {
     product_name: string;
 
     quantity: number;
+    product_available_stock?: number;
     price: number;
     distributor_margin: number;
     retailer_margin: number;
