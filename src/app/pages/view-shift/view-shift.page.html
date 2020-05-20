@@ -1,0 +1,59 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-back-button slot="start"></ion-back-button>
+        <ion-title>Shift Details</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="shift">
+    <ion-grid>
+        <ion-row>
+            <ion-col size="5"><strong>Shift By:</strong></ion-col>
+            <ion-col size="7">{{shift.user_name}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Shift Start Time:</strong></ion-col>
+            <ion-col size="7">{{shift.start_dt |date: 'dd/MM/yyyy hh:mm a'}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Shift End Time:</strong></ion-col>
+            <ion-col size="7">{{shift.end_dt | date:'dd/MM/yyyy hh:mm a'}}</ion-col>
+        </ion-row>
+        <ion-row *ngIf="shift.approved_by_name">
+            <ion-col size="5"><strong>Shift Approved By:</strong></ion-col>
+            <ion-col size="7">{{shift.approved_by_name}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Total:</strong></ion-col>
+            <ion-col size="7">{{shift.price_total | inr}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Shell Margin:</strong></ion-col>
+            <ion-col size="7">{{shift.distributor_margin_total | inr}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="5"><strong>Retailer Margin:</strong></ion-col>
+            <ion-col size="7">{{shift.retailer_margin_total | inr}}</ion-col>
+        </ion-row>
+        <ion-list>
+            <ion-list-header>Products Sold:</ion-list-header>
+            <ion-item *ngFor="let entry of shift.entries">
+                <ion-label>
+                    <h2>{{entry.product_name}}</h2>
+                    <ion-row>
+                        <ion-col size="6"><h3>Quantity:&nbsp;{{entry.quantity}}</h3></ion-col>
+                        <ion-col size="6"><h3>Cost:&nbsp;{{entry.price | inr}}</h3></ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="6"><h3>Shell Margin:&nbsp;{{entry.distributor_margin}}%</h3></ion-col>
+                        <ion-col size="6"><h3>Retailer Margin:&nbsp;{{entry.distributor_margin}}%</h3></ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="6"></ion-col>
+                        <ion-col size="6"><h3>Total:&nbsp;{{entry.entry_total|inr}}</h3></ion-col>
+                    </ion-row>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </ion-grid>
+</ion-content>

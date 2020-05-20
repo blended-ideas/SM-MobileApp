@@ -30,7 +30,7 @@
 
 <ion-content>
     <ion-list>
-        <div *ngFor="let shift of shifts">
+        <ion-card *ngFor="let shift of shifts">
             <ion-item>
                 <ion-label>
                     <h2>{{shift.user_name}}</h2>
@@ -52,9 +52,17 @@
                 <ion-button size="small" [fill]="'clear'" style="margin-left: auto;" [routerDirection]="'forward'"
                             [routerLink]="['/create-shift', shift.id]">Edit
                 </ion-button>
-                <ion-button size="small" [fill]="'clear'">View</ion-button>
+                <ion-button size="small" [fill]="'clear'" [routerDirection]="'forward'"
+                            [routerLink]="['/view-shift', shift.id]">View
+                </ion-button>
             </ion-item-divider>
-        </div>
+        </ion-card>
     </ion-list>
+    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" >
+        <ion-infinite-scroll-content
+                [loadingSpinner]="'bubbles'"
+                [loadingText]="'Loading more shifts...'">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
 </ion-content>

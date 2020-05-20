@@ -47,6 +47,14 @@ const routes: Routes = [
         path: 'create-shift/:shiftId',
         loadChildren: () => import('./pages/create-shift/create-shift.module').then(m => m.CreateShiftPageModule)
     },
+    {
+        path: 'view-shift/:shiftId',
+        loadChildren: () => import('./pages/view-shift/view-shift.module').then(m => m.ViewShiftPageModule)
+    },
+    {
+        path: 'view-product/:productId',
+        loadChildren: () => import('./pages/view-product/view-product.module').then(m => m.ViewProductPageModule)
+    },
     {path: '**', redirectTo: '/dashboard'},
 ];
 

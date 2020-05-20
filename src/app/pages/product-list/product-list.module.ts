@@ -10,6 +10,7 @@ import {ProductListPage} from './product-list.page';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SortComponent} from '../../components/sort/sort.component';
 import {ComponentsModule} from '../../components/components.module';
+import {PipeModule} from '../../pipe/pipe.module';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import {ComponentsModule} from '../../components/components.module';
         IonicModule,
         ProductListPageRoutingModule,
         FontAwesomeModule,
-        ComponentsModule
+        ComponentsModule,
+        PipeModule
     ],
     declarations: [ProductListPage],
     entryComponents: [SortComponent]

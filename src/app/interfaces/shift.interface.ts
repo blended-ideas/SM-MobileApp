@@ -19,6 +19,7 @@ export interface ShiftDetailInterface {
     end_dt: string;
     user: string;
     user_name: string;
+    approved_by_name: string;
     entries: ShiftEntryInterface[];
 
     price_total: number;

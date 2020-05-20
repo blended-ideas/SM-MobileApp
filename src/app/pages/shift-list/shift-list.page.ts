@@ -26,7 +26,9 @@ export class ShiftListPage implements OnInit {
         {name: 'Shift End Time', icon: faSortUp, value: 'end_dt'},
     ];
     isLoading: boolean;
+    next: string;
     shifts: ShiftDetailInterface[] = [];
+    queryMap: any;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -37,6 +39,7 @@ export class ShiftListPage implements OnInit {
 
     ngOnInit() {
         this.route.queryParamMap.subscribe(queryParamMap => {
+            this.queryMap = queryParamMap;
             this.fetchShifts(true, null, queryParamMap);
         });
     }
@@ -67,7 +70,7 @@ export class ShiftListPage implements OnInit {
         if (emptyArray) {
             this.shifts = [];
         }
-        let params = new HttpParams().set('page_size', '10');
+        let params = new HttpParams().set('page_size', '2');
         console.log(queryParamMap);
         if (queryParamMap.has('search')) {
             this.searchText = queryParamMap.get('search');
@@ -81,13 +84,21 @@ export class ShiftListPage implements OnInit {
         console.log(this.sortContext.value, 'this.sortContext.value');
         params = params.set('ordering', this.sortContext.value);
         this.shiftService.getShifts(params, link).subscribe(response => {
-            this.shifts = response.results;
-            console.log(this.shifts);
+            this.shifts = this.shifts.concat(...response.results);
+            this.next = response.next;
+            console.log(this.next);
             this.isLoading = false;
             this.utilService.dismissLoading();
+            if (infiniteScroll) {
+                console.log(infiniteScroll);
+                infiniteScroll.target.complete();
+            }
         }, () => {
             this.utilService.dismissLoading();
             this.isLoading = false;
+            if (infiniteScroll) {
+                infiniteScroll.target.complete();
+            }
         });
     }
 
@@ -111,5 +122,10 @@ export class ShiftListPage implements OnInit {
                 this.changeQueryParam('sort', data.data.value);
             }
         });
+    }
+
+    doInfiniteScroll(infiniteScroll) {
+        console.log(infiniteScroll);
+        this.fetchShifts(false, this.next, this.queryMap, infiniteScroll);
     }
 }
