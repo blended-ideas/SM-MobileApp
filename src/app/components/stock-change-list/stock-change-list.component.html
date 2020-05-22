@@ -1,10 +1,37 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button [size]="'small'" (click)="dismiss(false)">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Select Product</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button [size]="'small'" (click)="dismiss()">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button [size]="'small'" [color]="'primary'" [fill]="'solid'" (click)="addRemoveStock('ADD')">
+                Add Stock
+            </ion-button>
+            <ion-button [size]="'small'" [color]="'danger'" [fill]="'solid'" (click)="addRemoveStock('REMOVE')">
+                Remove Stock
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
+<ion-content>
+    <ion-list>
+        <ion-list-header>Stock Changes</ion-list-header>
+        <ion-item *ngFor="let stock of productStockChanges">
+            <ion-label>
+                <h2>{{stock.user_name}}</h2>
+                <h3>Stock Change:&nbsp;{{stock.value}}</h3>
+                <h3>Reason:&nbsp;{{stock.changeType}}</h3>
+                <p class="ion-text-right"
+                   style="opacity: 0.9; font-size: 0.8rem">{{stock.created| date: 'dd/MM/yyyy hh:mm a'}}</p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" *ngIf="next">
+        <ion-infinite-scroll-content
+                [loadingSpinner]="'bubbles'"
+                [loadingText]="'Loading more stocks...'">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>

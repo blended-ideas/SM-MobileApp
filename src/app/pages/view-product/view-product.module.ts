@@ -9,6 +9,8 @@ import {ViewProductPageRoutingModule} from './view-product-routing.module';
 import {ViewProductPage} from './view-product.page';
 import {PipeModule} from '../../pipe/pipe.module';
 import {StockChangeListComponent} from '../../components/stock-change-list/stock-change-list.component';
+import {ComponentsModule} from '../../components/components.module';
+import {UpdateExpiryDateComponent} from '../../components/update-expiry-date/update-expiry-date.component';
 
 @NgModule({
     imports: [
@@ -16,10 +18,14 @@ import {StockChangeListComponent} from '../../components/stock-change-list/stock
         FormsModule,
         IonicModule,
         ViewProductPageRoutingModule,
-        PipeModule
+        PipeModule,
+        ComponentsModule
     ],
     declarations: [ViewProductPage],
-    entryComponents: [StockChangeListComponent]
+    entryComponents: [
+        StockChangeListComponent,
+        UpdateExpiryDateComponent
+    ]
 })
 export class ViewProductPageModule {
 }

@@ -4,25 +4,28 @@ import {CommonModule} from '@angular/common';
 import {SortComponent} from './sort/sort.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {ProductSelectorComponent} from './product-selector/product-selector.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StockChangeListComponent} from './stock-change-list/stock-change-list.component';
 import {StockUpdatePopOverComponent} from './stock-update-pop-over/stock-update-pop-over.component';
+import {UpdateExpiryDateComponent} from './update-expiry-date/update-expiry-date.component';
 
 @NgModule({
     declarations: [
         SortComponent,
         ProductSelectorComponent,
         StockChangeListComponent,
-        StockUpdatePopOverComponent
+        StockUpdatePopOverComponent,
+        UpdateExpiryDateComponent
     ],
     imports: [
         CommonModule,
         IonicModule,
         FontAwesomeModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
     ],
     exports: [],
-    entryComponents: [],
+    entryComponents: [StockUpdatePopOverComponent],
     providers: []
 })
 export class ComponentsModule {

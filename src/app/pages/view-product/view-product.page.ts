@@ -6,6 +6,7 @@ import {ProductInterface} from '../../interfaces/product.interface';
 import {HttpParams} from '@angular/common/http';
 import {ModalController} from '@ionic/angular';
 import {StockChangeListComponent} from '../../components/stock-change-list/stock-change-list.component';
+import {UpdateExpiryDateComponent} from '../../components/update-expiry-date/update-expiry-date.component';
 
 @Component({
     selector: 'app-view-product',
@@ -39,10 +40,21 @@ export class ViewProductPage implements OnInit {
         });
     }
 
-    openStockChangesModal() {
-        const modal = this.modalController.create({
-            component: StockChangeListComponent
+    async openStockChangesModal() {
+        const modal = await this.modalController.create({
+            component: StockChangeListComponent,
+            componentProps: {
+                product: this.product
+            }
         });
+        await modal.present();
+    }
+
+    async updateExpiryDate() {
+        const modalExpiry = await this.modalController.create({
+            component: UpdateExpiryDateComponent
+        });
+        await modalExpiry.present();
     }
 
 }

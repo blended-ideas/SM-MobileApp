@@ -10,7 +10,10 @@ export const USER_APIS = {
 };
 
 export const PRODUCT_APIS = {
-    product: environment.base_url + 'products/product/'
+    product: environment.base_url + 'products/product/',
+    product_stock_change: environment.base_url + 'products/product_stock_change/',
+    add_stock: 'add_stock/',
+    reduce_stock: 'reduce_stock/'
 };
 
 export const SHIFT_APIS = {

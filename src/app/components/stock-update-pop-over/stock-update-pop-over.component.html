@@ -1,3 +1,31 @@
-<p>
-  stock-update-pop-over works!
-</p>
+<ion-content>
+    <div class="ion-padding">
+        <strong>{{type === 'ADD' ? 'Add' : 'Remove'}} Stock for {{product.name}}</strong>
+    </div>
+    <div class="ion-padding-start" style="padding-bottom: 5px; font-size: 0.9rem">
+        <ion-label>
+            Current Stock:&nbsp;<strong>{{product.stock}}</strong>
+        </ion-label>
+    </div>
+    <div class="ion-padding-start" style="font-size: 0.9rem">
+        <ion-label>
+            Stock after update:&nbsp;<strong>{{stockAfterUpdate}}</strong>
+        </ion-label>
+    </div>
+    <form [formGroup]="stockChangeForm" id="stockChangeForm">
+        <ion-item class="form-group">
+            <ion-label [position]="'floating'">Quantity to {{type === 'ADD' ? 'add' : 'deduct'}}:</ion-label>
+            <ion-input class="form-control form-control-sm" formControlName="changeValue" id="stock_change"
+                       type="number"></ion-input>
+        </ion-item>
+    </form>
+    <div class="ion-text-right" *ngIf="!isUpdating; else load">
+        <ion-button [size]="'small'" [color]="'danger'" (click)="dismiss(null)">Cancel</ion-button>
+        <ion-button [size]="'small'" [color]="'primary'" (click)="updateStock()">Update</ion-button>
+    </div>
+    <ng-template #load>
+        <div class="ion-text-right">
+            <ion-spinner></ion-spinner>
+        </div>
+    </ng-template>
+</ion-content>
