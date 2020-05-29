@@ -1,10 +1,33 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button [size]="'small'" (click)="dismiss(false)">
+            <ion-button [size]="'small'" (click)="dismiss()">
                 <ion-icon name="arrow-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+
+        <ion-buttons slot="end">
+            <ion-button [size]="'small'" [color]="'primary'" [fill]="'solid'" (click)="addExpiryDate()">
+                Add Expiry Date
             </ion-button>
         </ion-buttons>
         <ion-title>Select Product</ion-title>
     </ion-toolbar>
 </ion-header>
+<ion-content>
+    <ion-list>
+        <ion-list-header>Upcoming Expiry Dates</ion-list-header>
+        <ion-item *ngFor="let expiry of productExpiryDates">
+            <ion-label>
+                <h2>{{expiry.user_name}}</h2>
+            </ion-label>
+            <h2 style="opacity: 0.9; font-size: 0.8rem">{{expiry.datetime| date: 'dd/MM/yyyy'}}</h2>
+        </ion-item>
+    </ion-list>
+    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" *ngIf="next">
+        <ion-infinite-scroll-content
+                [loadingSpinner]="'bubbles'"
+                [loadingText]="'Loading more dates...'">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>

@@ -52,7 +52,10 @@ export class ViewProductPage implements OnInit {
 
     async updateExpiryDate() {
         const modalExpiry = await this.modalController.create({
-            component: UpdateExpiryDateComponent
+            component: UpdateExpiryDateComponent,
+            componentProps: {
+                product: this.product
+            }
         });
         await modalExpiry.present();
     }

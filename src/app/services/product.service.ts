@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {ProductInterface, ProductStockChangeInterface} from '../interfaces/product.interface';
+import {ProductExpiryDateInterface, ProductInterface, ProductStockChangeInterface} from '../interfaces/product.interface';
 import {Observable} from 'rxjs';
 import {PaginatedResponseInterface} from '../interfaces/paginatedResponse.interface';
 import {PRODUCT_APIS} from '../constants/api.constants';
@@ -49,4 +49,14 @@ export class ProductService {
         return this.httpClient.post<{ psu: ProductStockChangeInterface, new_stock: number }>(`${PRODUCT_APIS.product}${productId}/${PRODUCT_APIS.reduce_stock}`, postBody);
     }
 
+    getProductExpiryDates(params?: HttpParams, link?: string): Observable<PaginatedResponseInterface<ProductExpiryDateInterface>> {
+        if (link) {
+            return this.httpClient.get<PaginatedResponseInterface<ProductExpiryDateInterface>>(link);
+        }
+        return this.httpClient.get<PaginatedResponseInterface<ProductExpiryDateInterface>>(PRODUCT_APIS.product_expiry, {params});
+    }
+
+    postExpiry(postObj): Observable<ProductExpiryDateInterface> {
+        return this.httpClient.post<ProductExpiryDateInterface>(PRODUCT_APIS.product_expiry, postObj);
+    }
 }

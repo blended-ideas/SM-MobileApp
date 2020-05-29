@@ -1,0 +1,18 @@
+<ion-content>
+    <div class="ion-padding">
+        <strong>Add Expiry date for {{product.name}}</strong>
+    </div>
+    <div>
+        <ion-item>
+            <ion-label [position]="'floating'">Expiry Date</ion-label>
+            <ion-datetime displayFormat="DD/MM/YYYY" name="expiryDate"
+                          [(ngModel)]="expiryDate" [min]="today" [max]="maxDate">
+            </ion-datetime>
+        </ion-item>
+    </div>
+    <div class="ion-text-right">
+        <ion-button [size]="'small'" [color]="'danger'" (click)="dismiss(false)">Cancel</ion-button>
+        <ion-button [size]="'small'" [color]="'primary'" (click)="updateExpiryDate()" [disabled]="!expiryDate">Update
+        </ion-button>
+    </div>
+</ion-content>

@@ -8,6 +8,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StockChangeListComponent} from './stock-change-list/stock-change-list.component';
 import {StockUpdatePopOverComponent} from './stock-update-pop-over/stock-update-pop-over.component';
 import {UpdateExpiryDateComponent} from './update-expiry-date/update-expiry-date.component';
+import {AddExpiryDatePopOverComponent} from './add-expiry-date-pop-over/add-expiry-date-pop-over.component';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import {UpdateExpiryDateComponent} from './update-expiry-date/update-expiry-date
         ProductSelectorComponent,
         StockChangeListComponent,
         StockUpdatePopOverComponent,
-        UpdateExpiryDateComponent
+        UpdateExpiryDateComponent,
+        AddExpiryDatePopOverComponent
     ],
     imports: [
         CommonModule,
@@ -25,7 +27,7 @@ import {UpdateExpiryDateComponent} from './update-expiry-date/update-expiry-date
         ReactiveFormsModule
     ],
     exports: [],
-    entryComponents: [StockUpdatePopOverComponent],
+    entryComponents: [StockUpdatePopOverComponent, AddExpiryDatePopOverComponent],
     providers: []
 })
 export class ComponentsModule {

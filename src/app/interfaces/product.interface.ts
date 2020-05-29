@@ -30,3 +30,13 @@ export interface ProductStockChangeInterface {
 
     shift_total?: number; // Calculated
 }
+
+export interface ProductExpiryDateInterface {
+    user: number;
+    user_name: string;
+
+    product: string;
+    product_name: string;
+
+    datetime: string;
+}
