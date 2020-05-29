@@ -55,11 +55,11 @@ const routes: Routes = [
         path: 'view-product/:productId',
         loadChildren: () => import('./pages/view-product/view-product.module').then(m => m.ViewProductPageModule)
     },
+    {
+        path: 'margin',
+        loadChildren: () => import('./pages/margin/margin.module').then(m => m.MarginPageModule)
+    },
     {path: '**', redirectTo: '/dashboard'},
-  {
-    path: 'margin',
-    loadChildren: () => import('./pages/margin/margin.module').then( m => m.MarginPageModule)
-  },
 ];
 
 @NgModule({

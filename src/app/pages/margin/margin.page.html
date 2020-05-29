@@ -1,9 +1,49 @@
 <ion-header>
     <ion-toolbar>
+        <ion-back-button slot="start" [defaultHref]="'/dashboard'"></ion-back-button>
         <ion-title>Margin</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+        <ion-item>
+            <ion-label>Select Date</ion-label>
+            <ion-datetime [(ngModel)]="selectedDay" name="selectedDate" (ngModelChange)="getDayMargin()"></ion-datetime>
+        </ion-item>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <div *ngIf="margin && !isLoading" class="data_wrapper">
+        <app-margin-card
+                [date_string]="selectedDay"
+                [marginData]="margin.daily_margin"
+                [substring]="dayString"
+                report_type="DAILY"
+                title="Day Margin">
+        </app-margin-card>
+
+        <app-margin-card
+                [date_string]="selectedDay"
+                [marginData]="margin.weekly_margin"
+                [substring]="weekString"
+                report_type="WEEKLY"
+                title="Weekly Margin">
+        </app-margin-card>
+
+        <app-margin-card
+                [date_string]="selectedDay"
+                [marginData]="margin.monthly_margin"
+                [substring]="monthString"
+                report_type="MONTHLY"
+                title="Monthly Margin">
+        </app-margin-card>
+
+        <app-margin-card
+                [date_string]="selectedDay"
+                [marginData]="margin.quarterly_margin"
+                [substring]="quarterString"
+                report_type="QUARTERLY"
+                title="Quarterly Margin">
+        </app-margin-card>
+    </div>
 
 </ion-content>

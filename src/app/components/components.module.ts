@@ -9,6 +9,8 @@ import {StockChangeListComponent} from './stock-change-list/stock-change-list.co
 import {StockUpdatePopOverComponent} from './stock-update-pop-over/stock-update-pop-over.component';
 import {UpdateExpiryDateComponent} from './update-expiry-date/update-expiry-date.component';
 import {AddExpiryDatePopOverComponent} from './add-expiry-date-pop-over/add-expiry-date-pop-over.component';
+import {MarginCardComponent} from './margin-card/margin-card.component';
+import {PipeModule} from '../pipe/pipe.module';
 
 @NgModule({
     declarations: [
@@ -17,16 +19,18 @@ import {AddExpiryDatePopOverComponent} from './add-expiry-date-pop-over/add-expi
         StockChangeListComponent,
         StockUpdatePopOverComponent,
         UpdateExpiryDateComponent,
-        AddExpiryDatePopOverComponent
+        AddExpiryDatePopOverComponent,
+        MarginCardComponent
     ],
     imports: [
         CommonModule,
         IonicModule,
         FontAwesomeModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        PipeModule
     ],
-    exports: [],
+    exports: [MarginCardComponent],
     entryComponents: [StockUpdatePopOverComponent, AddExpiryDatePopOverComponent],
     providers: []
 })
