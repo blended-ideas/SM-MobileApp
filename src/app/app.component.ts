@@ -34,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // this.authenticationService.refreshToken();
+        this.authenticationService.refreshToken();
         this.loginSubscription = this.authenticationService.getLoginSubscription().subscribe(response => {
             console.log(response);
             if (response.type === 'login') {

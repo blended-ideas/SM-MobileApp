@@ -17,8 +17,7 @@ export class AuthenticationService {
     constructor(private httpClient: HttpClient,
                 private router: Router,
                 private sessionService: SessionService) {
-        // this.startAuthTokenRefresh();
-        // this.autoLoginOnStart();
+        this.startAuthTokenRefresh();
     }
 
     login(username: string, password: string) {
@@ -51,39 +50,39 @@ export class AuthenticationService {
         return this.loginSubject.asObservable();
     }
 
-    // private startAuthTokenRefresh() {
-    //     console.log('inside');
-    //     // Refresh Token every 5 minutes
-    //     interval(5 * 60 * 1000).subscribe(() => {
-    //         const token = this.sessionService.token;
-    //         if (token && !token.refresh) {
-    //             return;
-    //         }
-    //         this.httpClient.post<AuthTokenInterface>(USER_APIS.refreshToken, {refresh: this.sessionService.token.refresh})
-    //             .subscribe(response => {
-    //                 this.sessionService.token = {
-    //                     access: response.access,
-    //                     refresh: token.refresh
-    //                 };
-    //                 this.loginSubject.next({type: 'login', data: true});
-    //             });
-    //     });
-    // }
+    refreshToken() {
+        this.sessionService.jwt_token_from_storage().then(data => {
+            console.log(JSON.parse(data.value));
+            const refreshToken = data.value ? JSON.parse(data.value).refresh : null;
+            if (refreshToken) {
+                this.httpClient.post<AuthTokenInterface>(USER_APIS.refreshToken, {refresh: refreshToken})
+                    .subscribe(token => {
+                        this.sessionService.token = {
+                            access: token.access,
+                            refresh: token.refresh
+                        };
+                        this.loginSubject.next({type: 'login', data: true});
+                    });
+            }
+        });
+    }
 
-    // refreshToken() {
-    //     this.sessionService.jwt_token_from_storage().then(data => {
-    //         console.log(JSON.parse(data.value));
-    //         const refreshToken = data.value ? JSON.parse(data.value).refresh : null;
-    //         if (refreshToken) {
-    //             this.httpClient.post<AuthTokenInterface>(USER_APIS.refreshToken, {refresh: refreshToken})
-    //                 .subscribe(token => {
-    //                     this.sessionService.token = {
-    //                         access: token.access,
-    //                         refresh: token.refresh
-    //                     };
-    //                     this.loginSubject.next({type: 'login', data: true});
-    //                 });
-    //         }
-    //     });
-    // }
+    private startAuthTokenRefresh() {
+        console.log('inside');
+        // Refresh Token every 5 minutes
+        interval(5 * 60 * 1000).subscribe(() => {
+            const token = this.sessionService.token;
+            if (token && !token.refresh) {
+                return;
+            }
+            this.httpClient.post<AuthTokenInterface>(USER_APIS.refreshToken, {refresh: this.sessionService.token.refresh})
+                .subscribe(response => {
+                    this.sessionService.token = {
+                        access: response.access,
+                        refresh: token.refresh
+                    };
+                    this.loginSubject.next({type: 'login', data: true});
+                });
+        });
+    }
 }
