@@ -11,6 +11,8 @@ import {UpdateExpiryDateComponent} from './update-expiry-date/update-expiry-date
 import {AddExpiryDatePopOverComponent} from './add-expiry-date-pop-over/add-expiry-date-pop-over.component';
 import {MarginCardComponent} from './margin-card/margin-card.component';
 import {PipeModule} from '../pipe/pipe.module';
+import {CreateEditUserComponent} from './create-edit-user/create-edit-user.component';
+import {ChangePasswordComponent} from './change-password/change-password.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +22,9 @@ import {PipeModule} from '../pipe/pipe.module';
         StockUpdatePopOverComponent,
         UpdateExpiryDateComponent,
         AddExpiryDatePopOverComponent,
-        MarginCardComponent
+        MarginCardComponent,
+        CreateEditUserComponent,
+        ChangePasswordComponent
     ],
     imports: [
         CommonModule,

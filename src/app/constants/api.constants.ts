@@ -7,6 +7,7 @@ export const USER_APIS = {
 
     user: environment.base_url + 'users/user/',
     change_password: 'change_password/',
+    update_user_password: 'update_user_password/',
 };
 
 export const PRODUCT_APIS = {
