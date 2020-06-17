@@ -59,7 +59,7 @@ const routes: Routes = [
         path: 'margin',
         loadChildren: () => import('./pages/margin/margin.module').then(m => m.MarginPageModule)
     },
-    {path: '**', redirectTo: '/dashboard'},
+    {path: '**', redirectTo: '/dashboard'}
 ];
 
 @NgModule({

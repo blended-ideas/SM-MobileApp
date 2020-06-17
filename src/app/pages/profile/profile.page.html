@@ -1,9 +1,51 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-back-button slot="start"></ion-back-button>
+        <ion-title>Edit Profile</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <form [formGroup]="profileForm" id="editProfileForm" *ngIf="profileForm">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">Name</ion-label>
+                        <ion-input class="form-control" formControlName="name" id="nam"
+                                   type="text" [placeholder]="'Name'"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.name">
+                            <div class="error-message"
+                                 *ngIf="profileForm.get('name').hasError(validation.type) && (profileForm.get('name').dirty || profileForm.get('name').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
 
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label [position]="'floating'">User Name</ion-label>
+                        <ion-input class="form-control" formControlName="username" id="usrname"
+                                   type="text" [placeholder]="'User Name'"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.username">
+                            <div class="error-message"
+                                 *ngIf="profileForm.get('username').hasError(validation.type) && (profileForm.get('username').dirty || profileForm.get('username').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
+            <div class="ion-text-center">
+                <ion-button color="success" (click)="updateProfile()">Update</ion-button>
+            </div>
+        </ion-grid>
+    </form>
 </ion-content>
