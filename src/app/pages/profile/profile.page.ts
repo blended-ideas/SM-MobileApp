@@ -46,7 +46,7 @@ export class ProfilePage implements OnInit {
             username: [
                 {type: 'required', message: 'User Name is required'},
                 {type: 'maxLength', message: 'User Name cannot be more than 100 characters long'},
-                {type: 'required', message: 'User Name should be more than 2 characters long'},
+                {type: 'minLength', message: 'User Name should be more than 2 characters long'},
                 {type: 'pattern', message: 'User Name is invalid'},
             ]
 
@@ -54,6 +54,7 @@ export class ProfilePage implements OnInit {
     }
 
     updateProfile() {
+        this.profileForm.markAllAsTouched();
         this.userService.updateUser(this.user.id, this.profileForm.value).subscribe(response => {
             this.sessionService.user = response;
             this.user = response;

@@ -14,6 +14,8 @@ import {ResponseInterceptor} from './services/httpInterceptors/ResponseIntercept
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 import {ComponentsModule} from './components/components.module';
+import {Camera} from '@ionic-native/camera/ngx';
+import {FileTransfer} from '@ionic-native/file-transfer/ngx';
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import {ComponentsModule} from './components/components.module';
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         {provide: HTTP_INTERCEPTORS, useClass: APIInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: ResponseInterceptor, multi: true},
-        BarcodeScanner
+        BarcodeScanner,
+        Camera,
+        FileTransfer
     ],
     bootstrap: [AppComponent]
 })

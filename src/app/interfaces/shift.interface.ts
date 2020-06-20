@@ -21,6 +21,9 @@ export interface ShiftDetailInterface {
     user_name: string;
     approved_by_name: string;
     entries: ShiftEntryInterface[];
+    approved: boolean;
+    approved_by: number;
+
 
     price_total: number;
     distributor_margin_total: number;

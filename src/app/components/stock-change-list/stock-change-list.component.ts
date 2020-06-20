@@ -5,6 +5,7 @@ import {ProductInterface, ProductStockChangeInterface} from '../../interfaces/pr
 import {UtilService} from '../../services/util.service';
 import {ProductService} from '../../services/product.service';
 import {StockUpdatePopOverComponent} from '../stock-update-pop-over/stock-update-pop-over.component';
+import {SessionService} from '../../services/session.service';
 
 @Component({
     selector: 'app-stock-change-list',
@@ -16,15 +17,19 @@ export class StockChangeListComponent implements OnInit {
     productStockChanges: ProductStockChangeInterface[] = [];
     productStockChangeLoading: boolean;
     next: string;
+    allowStockChange: boolean;
 
     constructor(private modalController: ModalController,
                 private utilService: UtilService,
                 private productService: ProductService,
-                private popOverController: PopoverController) {
+                private popOverController: PopoverController,
+                private sessionService: SessionService) {
     }
 
     ngOnInit() {
         this.getProductStockChanges(true);
+        this.allowStockChange = this.sessionService.isAdmin() || this.sessionService.isAuditor();
+
     }
 
     getProductStockChanges(emptyArray?: boolean, link?: string, infiniteScroll?: any) {

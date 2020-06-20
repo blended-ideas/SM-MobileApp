@@ -3,7 +3,6 @@ import {ActivatedRoute} from '@angular/router';
 import {ProductService} from '../../services/product.service';
 import {UtilService} from '../../services/util.service';
 import {ProductInterface} from '../../interfaces/product.interface';
-import {HttpParams} from '@angular/common/http';
 import {ModalController} from '@ionic/angular';
 import {StockChangeListComponent} from '../../components/stock-change-list/stock-change-list.component';
 import {UpdateExpiryDateComponent} from '../../components/update-expiry-date/update-expiry-date.component';

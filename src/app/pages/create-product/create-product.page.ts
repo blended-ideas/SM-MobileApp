@@ -9,6 +9,11 @@ import {Observable} from 'rxjs';
 import {UtilService} from '../../services/util.service';
 import {faEdit, faPlusSquare} from '@fortawesome/free-solid-svg-icons';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
+import {PRODUCT_APIS} from '../../constants/api.constants';
+import {ImageService} from '../../services/image.service';
+import {CameraResultType, Plugins} from '@capacitor/core';
+
+const {Camera} = Plugins;
 
 @Component({
     selector: 'app-create-product',
@@ -34,6 +39,7 @@ export class CreateProductPage implements OnInit {
         stock: [],
         barcode_entry: []
     };
+    photo: { id?: number, image: string; viewImage: string };
 
     constructor(private sessionService: SessionService,
                 private fb: FormBuilder,
@@ -41,7 +47,8 @@ export class CreateProductPage implements OnInit {
                 private productService: ProductService,
                 private router: Router,
                 private utilService: UtilService,
-                private barcodeScanner: BarcodeScanner) {
+                private barcodeScanner: BarcodeScanner,
+                private imageService: ImageService) {
     }
 
     ngOnInit() {
@@ -74,6 +81,12 @@ export class CreateProductPage implements OnInit {
         }
         apiCall.subscribe(response => {
             this.utilService.presentToast(successMessage, 2000);
+            if (this.photo) {
+                this.imageService.uploadFile(PRODUCT_APIS.product + response.id + '/modify_image/',
+                    this.photo.image,
+                    {}, 'file',
+                    'image/jpeg');
+            }
             this.isCreating = false;
             this.utilService.dismissLoading();
             this.router.navigate(['/product']);
@@ -87,11 +100,31 @@ export class CreateProductPage implements OnInit {
     scanBarCode() {
         this.barcodeScanner.scan().then(barcodeData => {
             console.log('Barcode data', barcodeData);
-            this.productForm.controls.barcode_entry.setValue(barcodeData);
+            this.productForm.controls.barcode_entry.setValue(Number(barcodeData.text));
         }).catch(err => {
             console.log('Error', err);
         });
     }
+
+    async addImage() {
+        // this.imageService.getImage(true).then((results: { id?: number, image: string; viewImage: string }) => {
+        //     console.log(results);
+        //     this.photo = results;
+        // }).catch((err) => {
+        //     console.log(err, 'err');
+        //     this.utilService.presentToast('Something went wrong', 2000);
+        // });
+        const camera = await Camera.getPhoto({
+            quality: 90,
+            allowEditing: true,
+            resultType: CameraResultType.Uri
+        });
+        const imagePath = camera.webPath;
+        this.photo = {image: camera.path, viewImage: imagePath};
+        console.log(camera, 'camera');
+        console.log(imagePath);
+    }
+
 
     private buildForm() {
         this.productForm = this.fb.group({
@@ -154,7 +187,7 @@ export class CreateProductPage implements OnInit {
             ],
             barcode_entry: [
                 {type: 'required', message: 'Barcode is required.'},
-                {type: 'maxlength', message: 'Barcode cannot be more than 200 characters long.'}
+                {type: 'maxlength', message: 'Barcode cannot be more than 200 characters long.'},
             ],
 
         };

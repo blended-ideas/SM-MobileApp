@@ -5,7 +5,7 @@
                 <ion-icon name="arrow-back-outline"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-buttons slot="end">
+        <ion-buttons slot="end" *ngIf="allowStockChange">
             <ion-button [size]="'small'" [color]="'primary'" [fill]="'solid'" (click)="addRemoveStock('ADD')">
                 Add Stock
             </ion-button>
@@ -16,7 +16,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-list>
+    <ion-list *ngIf="productStockChanges?.length !== 0">
         <ion-list-header>Stock Changes</ion-list-header>
         <ion-item *ngFor="let stock of productStockChanges">
             <ion-label>

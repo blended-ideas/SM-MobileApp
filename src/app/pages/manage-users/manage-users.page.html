@@ -3,7 +3,7 @@
         <ion-back-button slot="start"></ion-back-button>
         <ion-title>Manage Users</ion-title>
         <ion-buttons slot="end">
-            <ion-button [fill]="'solid'" (click)="createUser()">
+            <ion-button color="dark" [fill]="'solid'" (click)="createUser()">
                 <fa-icon [icon]="faPlus"></fa-icon>&nbsp;
                 Create
             </ion-button>
@@ -26,10 +26,10 @@
                 </ion-col>
                 <ion-col size="3">
                     <ion-buttons class="ion-float-right">
-                        <ion-button (click)="editUser(user)">
+                        <ion-button type="button" color="dark" (click)="editUser(user)">
                             <fa-icon [icon]="faEdit"></fa-icon>
                         </ion-button>
-                        <ion-button (click)="changeUserPassword(user)">
+                        <ion-button type="button" color="dark" (click)="changeUserPassword(user)">
                             <fa-icon [icon]="faKey"></fa-icon>
                         </ion-button>
                     </ion-buttons>

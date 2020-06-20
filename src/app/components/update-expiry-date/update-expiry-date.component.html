@@ -15,7 +15,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-list>
+    <ion-list *ngIf="productExpiryDates?.length !== 0">
         <ion-list-header>Upcoming Expiry Dates</ion-list-header>
         <ion-item *ngFor="let expiry of productExpiryDates">
             <ion-label>

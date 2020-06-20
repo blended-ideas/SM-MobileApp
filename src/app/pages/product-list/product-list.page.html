@@ -1,9 +1,9 @@
 <ion-header>
     <ion-toolbar>
-        <ion-back-button slot="start"></ion-back-button>
+        <ion-back-button slot="start" [defaultHref]="'/dashboard'"></ion-back-button>
         <ion-title>Products/Service</ion-title>
         <ion-buttons slot="end">
-            <ion-button [size]="'small'" [fill]="'solid'" [routerDirection]="'forward'"
+            <ion-button *ngIf="allowCreate" color="dark" [size]="'small'" [fill]="'solid'" [routerDirection]="'forward'"
                         [routerLink]="'/create-product'">
                 <fa-icon [icon]="faPlusSquare"></fa-icon>&nbsp;
                 Create
@@ -13,7 +13,7 @@
     <ion-toolbar>
         <ion-row>
             <ion-col size="2" style="margin: auto">
-                <ion-button (click)="showAlert()" [fill]="'clear'" [size]="'small'">Sort</ion-button>
+                <ion-button (click)="showAlert()" [fill]="'clear'" [size]="'small'" color="dark">Sort</ion-button>
             </ion-col>
             <ion-col size="10">
                 <ion-searchbar [debounce]="500"
@@ -41,10 +41,11 @@
                 </ion-label>
             </ion-item>
             <ion-item-divider style="background-color: aliceblue">
-                <ion-button size="small" [fill]="'clear'" style="margin-left: auto;" [routerDirection]="'forward'"
+                <ion-button *ngIf="viewEdit" size="small" color="dark" [fill]="'clear'" style="margin-left: auto;"
+                            [routerDirection]="'forward'"
                             [routerLink]="['/create-product', product.id]">Edit
                 </ion-button>
-                <ion-button size="small" [fill]="'clear'" [routerDirection]="'forward'"
+                <ion-button size="small" color="dark" [fill]="'clear'" [routerDirection]="'forward'"
                             [routerLink]="['/view-product', product.id]">View
                 </ion-button>
             </ion-item-divider>
@@ -56,5 +57,9 @@
                 [loadingText]="'Loading more products...'">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
-
+    <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="barCodeScan()" color="dark">
+            <ion-icon name="barcode"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-content>

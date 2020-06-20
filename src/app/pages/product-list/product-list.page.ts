@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProductInterface} from '../../interfaces/product.interface';
 import {ProductService} from '../../services/product.service';
 import {HttpParams} from '@angular/common/http';
@@ -14,15 +14,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {SessionService} from '../../services/session.service';
 import {UtilService} from '../../services/util.service';
-import {PopoverController} from '@ionic/angular';
+import {PopoverController, Platform} from '@ionic/angular';
 import {SortComponent} from '../../components/sort/sort.component';
+import {Subscription} from 'rxjs';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 
 @Component({
     selector: 'app-product-list',
     templateUrl: './product-list.page.html',
     styleUrls: ['./product-list.page.scss'],
 })
-export class ProductListPage implements OnInit {
+export class ProductListPage implements OnInit, OnDestroy {
     products: ProductInterface[] = [];
     sortValues = [
         {name: 'Name', icon: faSortAlphaUp, value: 'name'},
@@ -33,23 +35,33 @@ export class ProductListPage implements OnInit {
         {name: 'Stock', icon: faSortNumericUp, value: '-stock'},
     ];
     viewEdit: boolean;
+    allowCreate: boolean;
     sortContext: { name: string, icon: any, value: string };
     searchText: string;
     isLoading: boolean;
     faPlusSquare = faPlusSquare;
     next: string;
     sort: string;
+    backButtonSubscription: Subscription;
 
     constructor(private productService: ProductService,
                 private sessionService: SessionService,
                 private router: Router,
                 private utilService: UtilService,
-                private popoverController: PopoverController) {
+                private popoverController: PopoverController,
+                private platform: Platform,
+                private barcodeScanner: BarcodeScanner) {
+        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            if (this.router.url === '/shift') {
+                this.router.navigate(['/dashboard']);
+            }
+        });
     }
 
     ngOnInit() {
         this.fetchProducts(true);
         this.viewEdit = this.sessionService.isAdmin() || this.sessionService.isAuditor();
+        this.allowCreate = this.sessionService.isAdmin() || this.sessionService.isAuditor();
     }
 
     fetchProducts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
@@ -109,5 +121,23 @@ export class ProductListPage implements OnInit {
 
     doInfiniteScroll(infiniteScroll) {
         this.fetchProducts(false, this.next, infiniteScroll);
+    }
+
+    barCodeScan() {
+        this.barcodeScanner.scan().then(barcodeData => {
+            console.log('Barcode data', barcodeData);
+            this.searchText = barcodeData.text;
+            if (this.searchText) {
+                this.fetchProducts(true);
+            }
+        }).catch(err => {
+            console.log('Error', err);
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
     }
 }

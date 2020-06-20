@@ -1,15 +1,108 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button [size]="'small'" (click)="dismiss(false)">
+            <ion-button [size]="'small'" (click)="dismiss()">
                 <ion-icon name="arrow-back-outline"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title>Select Product</ion-title>
+        <ion-title>{{mode}} User</ion-title>
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <form>
-        <ion-grid></ion-grid>
+    <form [formGroup]="userForm" id="userForm" *ngIf="userForm">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label position="floating">Name</ion-label>
+                        <ion-input class="form-control" type="text" formControlName="name"
+                                   placeholder="Name" id="name"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.name">
+                            <div class="error-message"
+                                 *ngIf="userForm.get('name').hasError(validation.type) && (userForm.get('name').dirty || userForm.get('name').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label position="floating">Login Id</ion-label>
+                        <ion-input class="form-control" type="text" formControlName="username"
+                                   placeholder="Login Id" id="username"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.username">
+                            <div class="error-message"
+                                 *ngIf="userForm.get('username').hasError(validation.type) && (userForm.get('username').dirty || userForm.get('username').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
+
+            <ion-row class="form-group" formGroupName="roles_change">
+                <ion-col size="6">
+                    <ion-item class="ion-no-padding form-check">
+                        <ion-label>Auditor</ion-label>
+                        <ion-checkbox class="form-control" formControlName="auditor" id="auditor"
+                                      slot="start"></ion-checkbox>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-item class="ion-no-padding form-check">
+                        <ion-label>Worker</ion-label>
+                        <ion-checkbox class="form-control" formControlName="shiftworker" id="shiftworker"
+                                      slot="start"></ion-checkbox>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngIf="mode === 'create'">
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label position="floating">Password</ion-label>
+                        <ion-input class="form-control" type="text" formControlName="password"
+                                   placeholder="Password" id="pass"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.password">
+                            <div class="error-message"
+                                 *ngIf="userForm.get('password').hasError(validation.type) && (userForm.get('password').dirty || userForm.get('password').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngIf="mode === 'create'">
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label position="floating">Confirm Password</ion-label>
+                        <ion-input class="form-control" type="text" formControlName="confirm_password"
+                                   placeholder="Confirm Password" id="confirm_pass"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.confirm_password">
+                            <div class="error-message"
+                                 *ngIf="userForm.get('confirm_password').hasError(validation.type) && (userForm.get('confirm_password').dirty || userForm.get('confirm_password').touched)">
+                                {{ validation.message }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ion-col>
+            </ion-row>
+            <div *ngIf="matchPasswordError" class="ion-text-center">
+                <small style="color: red">New Password and Confirm Password do not match</small>
+            </div>
+            <div class="ion-text-right">
+                <ion-button type="button" color="dark" (click)="saveUser()"
+                            [disabled]="userForm?.invalid">{{mode}}</ion-button>
+            </div>
+        </ion-grid>
     </form>
 </ion-content>

@@ -8,6 +8,7 @@ export const USER_APIS = {
     user: environment.base_url + 'users/user/',
     change_password: 'change_password/',
     update_user_password: 'update_user_password/',
+    roles: environment.base_url + 'users/roles/',
 };
 
 export const PRODUCT_APIS = {
@@ -20,7 +21,8 @@ export const PRODUCT_APIS = {
 
 export const SHIFT_APIS = {
     detail: environment.base_url + 'shifts/detail/',
-    entry: environment.base_url + 'shifts/entry/'
+    entry: environment.base_url + 'shifts/entry/',
+    approve: 'approve'
 };
 export const REPORT_APIS = {
     daily: environment.base_url + 'reports/daily_margin/',

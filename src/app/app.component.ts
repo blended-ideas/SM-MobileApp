@@ -16,6 +16,7 @@ const {StatusBar, SplashScreen} = Plugins;
 export class AppComponent implements OnInit, OnDestroy {
     isLoggedIn: boolean;
     loginSubscription: Subscription;
+    isAdmin: boolean;
 
     constructor(
         private platform: Platform,
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.authenticationService.refreshToken();
+        this.isAdmin = this.sessionService.isAdmin();
         this.loginSubscription = this.authenticationService.getLoginSubscription().subscribe(response => {
             console.log(response);
             if (response.type === 'login') {

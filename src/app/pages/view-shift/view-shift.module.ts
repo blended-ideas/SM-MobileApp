@@ -8,6 +8,7 @@ import {ViewShiftPageRoutingModule} from './view-shift-routing.module';
 
 import {ViewShiftPage} from './view-shift.page';
 import {PipeModule} from '../../pipe/pipe.module';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {PipeModule} from '../../pipe/pipe.module';
         FormsModule,
         IonicModule,
         ViewShiftPageRoutingModule,
-        PipeModule
+        PipeModule,
+        FontAwesomeModule
     ],
     declarations: [ViewShiftPage]
 })

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {faSortDown, faSortUp, faCalendar, faPlusSquare, faEye, faEdit} from '@fortawesome/free-solid-svg-icons';
 import {ShiftDetailInterface} from '../../interfaces/shift.interface';
@@ -6,14 +6,16 @@ import {HttpParams} from '@angular/common/http';
 import {UtilService} from '../../services/util.service';
 import {ShiftService} from '../../services/shift.service';
 import {SortComponent} from '../../components/sort/sort.component';
-import {PopoverController} from '@ionic/angular';
+import {Platform, PopoverController} from '@ionic/angular';
+import {SessionService} from '../../services/session.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-shift-list',
     templateUrl: './shift-list.page.html',
     styleUrls: ['./shift-list.page.scss'],
 })
-export class ShiftListPage implements OnInit {
+export class ShiftListPage implements OnInit, OnDestroy {
     searchText: string;
     faPlusSquare = faPlusSquare;
     faEdit = faEdit;
@@ -29,17 +31,28 @@ export class ShiftListPage implements OnInit {
     next: string;
     sort: string;
     shifts: ShiftDetailInterface[] = [];
-    queryMap: any;
+    isAdmin: boolean;
+    isAuditor: boolean;
+    backButtonSubscription: Subscription;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 private utilService: UtilService,
                 private shiftService: ShiftService,
-                private popoverController: PopoverController) {
+                private popoverController: PopoverController,
+                private sessionService: SessionService,
+                private platform: Platform) {
+        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            if (this.router.url === '/shift') {
+                this.router.navigate(['/dashboard']);
+            }
+        });
     }
 
     ngOnInit() {
         this.fetchShifts(true, null);
+        this.isAdmin = this.sessionService.isAdmin();
+        this.isAuditor = this.sessionService.isAuditor();
     }
 
     fetchShifts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
@@ -99,5 +112,11 @@ export class ShiftListPage implements OnInit {
 
     doInfiniteScroll(infiniteScroll) {
         this.fetchShifts(false, this.next, infiniteScroll);
+    }
+
+    ngOnDestroy(): void {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
     }
 }

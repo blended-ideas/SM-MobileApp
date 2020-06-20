@@ -3,7 +3,7 @@
         <ion-back-button slot="start"></ion-back-button>
         <ion-title>{{mode}} Product/Service</ion-title>
         <ion-buttons slot="end">
-            <ion-button [size]="'small'" [fill]="'solid'" (click)="createProduct()">
+            <ion-button color="dark" [size]="'small'" [fill]="'solid'" (click)="createProduct()">
                 <fa-icon [icon]="mode === 'Create' ? faPlusSquare: faEdit"></fa-icon>&nbsp;
                 {{mode}}
             </ion-button>
@@ -153,6 +153,15 @@
                     <ion-button size="small" (click)="scanBarCode()">Scan Barcode</ion-button>
                 </ion-col>
             </ion-row>
+            <div class="ion-text-center">
+                <img *ngIf="photo?.viewImage" [src]="photo.viewImage" width="250" height="250">
+            </div>
+
+            <ion-fab vertical="bottom" horizontal="end">
+                <ion-fab-button (click)="addImage()" color="dark">
+                    <ion-icon name="camera"></ion-icon>
+                </ion-fab-button>
+            </ion-fab>
         </ion-grid>
     </form>
 </ion-content>
