@@ -60,15 +60,15 @@ export class ImageService {
         // fileName = fileName || 'file';
         const fl = new URL(fileURI);
         const newFile = fl.origin + fl.pathname;
-        const file_name = newFile.split('.');
+        const fileNameKey = newFile.split('.');
         const options: FileUploadOptions = {
             fileKey: fileName,
-            fileName: file_name[file_name.length - 1],
+            fileName: fileNameKey[fileNameKey.length - 1],
             params: data,
             mimeType,
             httpMethod: httpMethod || 'POST',
             headers: {
-                Authorization: 'JWT ' + this.sessionService.token.access
+                Authorization: 'Bearer ' + this.sessionService.token.access
             }
         };
 
