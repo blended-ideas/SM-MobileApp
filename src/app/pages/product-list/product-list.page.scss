@@ -1,3 +1,20 @@
 .leftMargin {
   margin-left: auto;
 }
+
+.numberedCircleWrapper {
+  display: flex;
+  height: 100%;
+
+  .numberedCircle {
+    margin: auto;
+    border-radius: 50%;
+    padding: 5px;
+    background: #fff;
+    border: 2px solid #666;
+    color: #666;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.4rem;
+  }
+}

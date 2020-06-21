@@ -32,6 +32,16 @@
     <ion-list>
         <ion-card *ngFor="let product of products">
             <ion-item>
+                <ion-avatar slot="start">
+                    <img *ngIf="product.image; else characterCircle" [src]="product.image">
+                    <ng-template #characterCircle>
+                        <div class="numberedCircleWrapper">
+                            <div class="numberedCircle ion-text-center">
+                                {{product.name[0]}}
+                            </div>
+                        </div>
+                    </ng-template>
+                </ion-avatar>
                 <ion-label>
                     <h2>{{product.name}}</h2>
                     <ion-row>

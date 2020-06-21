@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserInterface} from '../../interfaces/user.interface';
 import {AuthenticationService} from '../../services/authentication.service';
+import {SessionService} from '../../services/session.service';
 
 @Component({
     selector: 'app-change-password',
@@ -19,10 +20,12 @@ export class ChangePasswordPage implements OnInit {
     private user: UserInterface;
 
     constructor(private fb: FormBuilder,
-                private authenticationService: AuthenticationService) {
+                private authenticationService: AuthenticationService,
+                private sessionService: SessionService) {
     }
 
     ngOnInit() {
+        this.user = this.sessionService.user;
         this.passwordForm = this.fb.group({
             old_password: ['', [Validators.required, Validators.maxLength(20)]],
             new_password: ['', [Validators.required, Validators.minLength(6)]],
