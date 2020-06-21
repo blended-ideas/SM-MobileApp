@@ -19,21 +19,31 @@
 </ion-header>
 
 <ion-content>
-    <ion-card [routerDirection]="'forward'" [routerLink]="'/product'">
-        <ion-card-header>
-            <ion-card-title class="ion-text-center ion-margin">Products</ion-card-title>
-        </ion-card-header>
-    </ion-card>
-
-    <ion-card [routerDirection]="'forward'" [routerLink]="'/shift'">
-        <ion-card-header>
-            <ion-card-title class="ion-text-center ion-margin">Shifts</ion-card-title>
-        </ion-card-header>
-    </ion-card>
-
-    <ion-card [routerDirection]="'forward'" [routerLink]="'/margin'">
-        <ion-card-header>
-            <ion-card-title class="ion-text-center ion-margin">Margin</ion-card-title>
-        </ion-card-header>
-    </ion-card>
+    <ion-list>
+        <ion-list-header style="font-size: 16px; font-weight: 600">Products Expiring over next 10 days:
+        </ion-list-header>
+        <ion-item *ngFor="let expiryDate of productExpiryDates">
+            <ion-label>
+                <h2>{{expiryDate.product_name}}</h2>
+                <p>{{expiryDate.datetime|date: 'dd/MM/yyyy'}}</p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" *ngIf="next">
+        <ion-infinite-scroll-content
+                [loadingSpinner]="'bubbles'"
+                [loadingText]="'Loading more products...'">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>
+<ion-footer>
+    <div class="ion-text-right">
+        <ion-button type="button" color="dark" (click)="downloadExpiryReport()"
+                    *ngIf="!isReportDownloading; else showSpin">Download
+            Report
+        </ion-button>
+        <ng-template #showSpin>
+            <ion-spinner *ngIf="isReportDownloading"></ion-spinner>
+        </ng-template>
+    </div>
+</ion-footer>

@@ -63,7 +63,7 @@ const routes: Routes = [
         path: 'manage-users',
         loadChildren: () => import('./pages/manage-users/manage-users.module').then(m => m.ManageUsersPageModule)
     },
-    {path: '**', redirectTo: '/dashboard'},
+    {path: '**', redirectTo: '/dashboard', pathMatch: 'full'},
 ];
 
 @NgModule({

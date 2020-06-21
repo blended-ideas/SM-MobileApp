@@ -42,14 +42,15 @@ export class ShiftListPage implements OnInit, OnDestroy {
                 private popoverController: PopoverController,
                 private sessionService: SessionService,
                 private platform: Platform) {
+    }
+
+    ngOnInit() {
         this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            console.log(this.router.url, 'shift');
             if (this.router.url === '/shift') {
                 this.router.navigate(['/dashboard']);
             }
         });
-    }
-
-    ngOnInit() {
         this.fetchShifts(true, null);
         this.isAdmin = this.sessionService.isAdmin();
         this.isAuditor = this.sessionService.isAuditor();
@@ -116,6 +117,13 @@ export class ShiftListPage implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
+    }
+
+    ionViewDidLeave() {
+        if (this.backButtonSubscription) {
+            console.log('inside');
             this.backButtonSubscription.unsubscribe();
         }
     }

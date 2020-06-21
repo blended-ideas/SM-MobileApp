@@ -51,17 +51,18 @@ export class ProductListPage implements OnInit, OnDestroy {
                 private popoverController: PopoverController,
                 private platform: Platform,
                 private barcodeScanner: BarcodeScanner) {
-        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
-            if (this.router.url === '/shift') {
-                this.router.navigate(['/dashboard']);
-            }
-        });
     }
 
     ngOnInit() {
         this.fetchProducts(true);
         this.viewEdit = this.sessionService.isAdmin() || this.sessionService.isAuditor();
         this.allowCreate = this.sessionService.isAdmin() || this.sessionService.isAuditor();
+        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            console.log(this.router.url, 'product');
+            if (this.router.url === '/product') {
+                this.router.navigate(['/dashboard']);
+            }
+        });
     }
 
     fetchProducts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
@@ -135,8 +136,17 @@ export class ProductListPage implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
+        console.log('in');
         if (this.backButtonSubscription) {
+            console.log('inside');
+            this.backButtonSubscription.unsubscribe();
+        }
+    }
+
+    ionViewDidLeave() {
+        if (this.backButtonSubscription) {
+            console.log('inside');
             this.backButtonSubscription.unsubscribe();
         }
     }

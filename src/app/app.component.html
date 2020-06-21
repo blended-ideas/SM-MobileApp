@@ -4,23 +4,60 @@
             <ion-content>
                 <ion-img [src]="'/assets/logos/logoRectangleKannada.jpeg'"></ion-img>
                 <ion-list>
-                    <ion-item [routerDirection]="'forward'" [routerLink]="'/profile'" (click)="menuClose()">
-                        <ion-label> My Profile</ion-label>
-                    </ion-item>
-                    <ion-item [routerDirection]="'forward'" [routerLink]="'/change-password'" (click)="menuClose()"
+                    <ion-item [routerDirection]="'forward'" [routerLink]="'/product'" (click)="menuClose()"
                               *ngIf="isLoggedIn">
-                        <ion-label> Change Password</ion-label>
+                        <ion-label>
+                            <fa-icon [icon]="faShoppingCart"></fa-icon>&nbsp;
+                            Products
+                        </ion-label>
+                    </ion-item>
+                    <ion-item [routerDirection]="'forward'" [routerLink]="'/shift'" (click)="menuClose()"
+                              *ngIf="isLoggedIn">
+                        <ion-label>
+                            <fa-icon [icon]="faPenAlt"></fa-icon>&nbsp;
+                            Shifts
+                        </ion-label>
+                    </ion-item>
+                    <ion-item [routerDirection]="'forward'" [routerLink]="'/margin'" (click)="menuClose()"
+                              *ngIf="isLoggedIn">
+                        <ion-label>
+                            <fa-icon [icon]="faFileExcel"></fa-icon>&nbsp;
+                            Margin
+                        </ion-label>
+                    </ion-item>
+                    <ion-item [routerDirection]="'forward'" [routerLink]="'/profile'" (click)="menuClose()"
+                              *ngIf="isLoggedIn">
+                        <ion-label>
+                            <fa-icon [icon]="faUser"></fa-icon>&nbsp;
+                            My Profile
+                        </ion-label>
                     </ion-item>
                     <ion-item [routerDirection]="'forward'" [routerLink]="'/manage-users'" (click)="menuClose()"
                               *ngIf="isLoggedIn && isAdmin">
-                        <ion-label> Manage Users</ion-label>
+                        <ion-label>
+                            <fa-icon [icon]="faUserCog"></fa-icon>&nbsp;
+                            Manage Users
+                        </ion-label>
+                    </ion-item>
+                    <ion-item [routerDirection]="'forward'" [routerLink]="'/change-password'" (click)="menuClose()"
+                              *ngIf="isLoggedIn">
+                        <ion-label>
+                            <fa-icon [icon]="faKey"></fa-icon>&nbsp;
+                            Change Password
+                        </ion-label>
                     </ion-item>
                     <ion-item (click)="onLogout()" *ngIf="isLoggedIn">
-                        <ion-label> Logout</ion-label>
+                        <ion-label>
+                            <fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp;
+                            Logout
+                        </ion-label>
                     </ion-item>
                     <ion-item [routerDirection]="'forward'" [routerLink]="'/login'" *ngIf="!isLoggedIn"
                               (click)="menuClose()">
-                        <ion-label> Login</ion-label>
+                        <ion-label>
+                            <fa-icon [icon]="faSignInAlt"></fa-icon>&nbsp;
+                            Login
+                        </ion-label>
                     </ion-item>
                 </ion-list>
             </ion-content>

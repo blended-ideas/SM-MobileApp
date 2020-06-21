@@ -5,6 +5,7 @@ import {ParamMap} from '@angular/router';
 import {HttpParams} from '@angular/common/http';
 import {ProductService} from '../../services/product.service';
 import {UtilService} from '../../services/util.service';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 
 @Component({
     selector: 'app-product-selector',
@@ -20,7 +21,8 @@ export class ProductSelectorComponent implements OnInit {
 
     constructor(private modalController: ModalController,
                 private productService: ProductService,
-                private utilService: UtilService) {
+                private utilService: UtilService,
+                private barcodeScanner: BarcodeScanner) {
     }
 
     ngOnInit() {
@@ -92,4 +94,19 @@ export class ProductSelectorComponent implements OnInit {
         this.fetchProducts(false, this.next, infiniteScroll);
     }
 
+    onCancelSearch(ev) {
+        this.searchText = '';
+    }
+
+    barCodeScan() {
+        this.barcodeScanner.scan().then(barcodeData => {
+            console.log('Barcode data', barcodeData);
+            this.searchText = barcodeData.text;
+            if (this.searchText) {
+                this.fetchProducts(true);
+            }
+        }).catch(err => {
+            console.log('Error', err);
+        });
+    }
 }
