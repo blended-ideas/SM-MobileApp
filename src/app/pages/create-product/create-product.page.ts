@@ -195,10 +195,15 @@ export class CreateProductPage implements OnInit {
     }
 
     private fetchProduct(productId: string) {
+        this.photo = {image: '', viewImage: ''};
         this.initialLoading = true;
         this.productService.getProductById(productId).subscribe(response => {
             this.initialLoading = false;
             this.product = response;
+            console.log(this.product.image);
+            if (this.product.image) {
+                this.photo.viewImage = this.product.image;
+            }
             this.buildForm();
         });
     }

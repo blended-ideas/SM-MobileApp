@@ -156,12 +156,11 @@
             <div class="ion-text-center">
                 <img *ngIf="photo?.viewImage" [src]="photo.viewImage" width="250" height="250">
             </div>
-
-            <ion-fab vertical="bottom" horizontal="end">
-                <ion-fab-button (click)="addImage()" color="dark">
-                    <ion-icon name="camera"></ion-icon>
-                </ion-fab-button>
-            </ion-fab>
         </ion-grid>
     </form>
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="addImage()" color="dark">
+            <ion-icon name="camera"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-content>
