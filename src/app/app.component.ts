@@ -30,6 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     loginSubscription: Subscription;
     backButtonSubscription: Subscription;
     isAdmin: boolean;
+    viewMargin: boolean;
     bool = true;
     faShoppingCart = faShoppingCart;
     faPenAlt = faPenAlt;
@@ -80,6 +81,7 @@ export class AppComponent implements OnInit, OnDestroy {
     async initializeApp() {
         this.isLoggedIn = await this.sessionService.isLoggedIn(true);
         this.isAdmin = this.sessionService.isAdmin();
+        this.viewMargin = this.sessionService.isAdmin() || this.sessionService.isAuditor();
         console.log(this.isAdmin);
     }
 

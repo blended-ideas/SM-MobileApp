@@ -49,7 +49,8 @@
                 </ion-label>
             </ion-item>
             <ion-item-divider style="background-color: aliceblue">
-                <ion-button *ngIf="isAdmin || ((isAuditor || shift.user === user.id) && !shift.approved)" color="dark"
+                <ion-button *ngIf="isAdmin || ((isAuditor || shift.user === user.id) && !shift.approved)"
+                            color="dark"
                             size="small" [fill]="'clear'" style="margin-left: auto;"
                             [routerDirection]="'forward'"
                             [routerLink]="['/create-shift', shift.id]">Edit

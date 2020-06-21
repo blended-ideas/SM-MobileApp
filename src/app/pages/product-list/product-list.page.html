@@ -46,7 +46,8 @@
                             [routerLink]="['/create-product', product.id]">Edit
                 </ion-button>
                 <ion-button size="small" color="dark" [fill]="'clear'" [routerDirection]="'forward'"
-                            [routerLink]="['/view-product', product.id]">View
+                            [routerLink]="['/view-product', product.id]"
+                            [ngClass]="{leftMargin: !viewEdit}">View
                 </ion-button>
             </ion-item-divider>
         </ion-card>

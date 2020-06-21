@@ -1,6 +1,6 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {faSortDown, faSortUp, faCalendar, faPlusSquare, faEye, faEdit} from '@fortawesome/free-solid-svg-icons';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {faCalendar, faEdit, faEye, faPlusSquare, faSortDown, faSortUp} from '@fortawesome/free-solid-svg-icons';
 import {ShiftDetailInterface} from '../../interfaces/shift.interface';
 import {HttpParams} from '@angular/common/http';
 import {UtilService} from '../../services/util.service';
@@ -9,6 +9,7 @@ import {SortComponent} from '../../components/sort/sort.component';
 import {Platform, PopoverController} from '@ionic/angular';
 import {SessionService} from '../../services/session.service';
 import {Subscription} from 'rxjs';
+import {UserInterface} from '../../interfaces/user.interface';
 
 @Component({
     selector: 'app-shift-list',
@@ -34,6 +35,7 @@ export class ShiftListPage implements OnInit, OnDestroy {
     isAdmin: boolean;
     isAuditor: boolean;
     backButtonSubscription: Subscription;
+    user: UserInterface;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -54,6 +56,7 @@ export class ShiftListPage implements OnInit, OnDestroy {
         this.fetchShifts(true, null);
         this.isAdmin = this.sessionService.isAdmin();
         this.isAuditor = this.sessionService.isAuditor();
+        this.user = this.sessionService.user;
     }
 
     fetchShifts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
@@ -62,7 +65,7 @@ export class ShiftListPage implements OnInit, OnDestroy {
         if (emptyArray) {
             this.shifts = [];
         }
-        let params = new HttpParams().set('page_size', '2');
+        let params = new HttpParams().set('page_size', '10');
         if (this.searchText) {
             params = params.set('search', this.searchText);
         }

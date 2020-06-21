@@ -19,14 +19,14 @@
                         </ion-label>
                     </ion-item>
                     <ion-item [routerDirection]="'forward'" [routerLink]="'/margin'" (click)="menuClose()"
-                              *ngIf="isLoggedIn">
+                              *ngIf="isLoggedIn && viewMargin">
                         <ion-label>
                             <fa-icon [icon]="faFileExcel"></fa-icon>&nbsp;
                             Margin
                         </ion-label>
                     </ion-item>
                     <ion-item [routerDirection]="'forward'" [routerLink]="'/profile'" (click)="menuClose()"
-                              *ngIf="isLoggedIn">
+                              *ngIf="isLoggedIn && viewMargin">
                         <ion-label>
                             <fa-icon [icon]="faUser"></fa-icon>&nbsp;
                             My Profile

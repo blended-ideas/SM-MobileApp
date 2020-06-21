@@ -17,7 +17,7 @@ export interface ShiftDetailInterface {
     id: string;
     start_dt: string;
     end_dt: string;
-    user: string;
+    user: number;
     user_name: string;
     approved_by_name: string;
     entries: ShiftEntryInterface[];
