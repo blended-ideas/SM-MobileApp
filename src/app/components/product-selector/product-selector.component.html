@@ -15,12 +15,15 @@
             <ion-checkbox slot="end" [(ngModel)]="product.checked"></ion-checkbox>
         </ion-item>
     </ion-list>
-    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)" *ngIf="next">
-        <ion-infinite-scroll-content
-                [loadingSpinner]="'bubbles'"
-                [loadingText]="'Loading more products...'">
-        </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+    <!--    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)">-->
+    <!--        <ion-infinite-scroll-content-->
+    <!--                [loadingSpinner]="'bubbles'"-->
+    <!--                [loadingText]="'Loading more products...'">-->
+    <!--        </ion-infinite-scroll-content>-->
+    <!--    </ion-infinite-scroll>-->
+    <div class="ion-text-center" *ngIf="next">
+        <ion-button size="small" (click)="doInfiniteScroll($event)" color="dark">Load More</ion-button>
+    </div>
 </ion-content>
 <ion-footer>
     <div class="ion-text-right">

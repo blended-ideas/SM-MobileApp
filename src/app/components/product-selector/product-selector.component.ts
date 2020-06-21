@@ -55,15 +55,15 @@ export class ProductSelectorComponent implements OnInit {
             }
             console.log(this.products);
             this.next = response.next;
-            if (infiniteScroll) {
-                infiniteScroll.target.complete();
-            }
+            // if (infiniteScroll) {
+            //     infiniteScroll.target.complete();
+            // }
             this.isLoading = false;
             this.utilService.dismissLoading();
         }, () => {
-            if (infiniteScroll) {
-                infiniteScroll.target.complete();
-            }
+            // if (infiniteScroll) {
+            //     infiniteScroll.target.complete();
+            // }
             this.utilService.dismissLoading();
             this.isLoading = false;
         });
