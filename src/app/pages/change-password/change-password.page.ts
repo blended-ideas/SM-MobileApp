@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserInterface} from '../../interfaces/user.interface';
 import {AuthenticationService} from '../../services/authentication.service';
 import {SessionService} from '../../services/session.service';
+import {UtilService} from '../../services/util.service';
 
 @Component({
     selector: 'app-change-password',
@@ -21,7 +22,8 @@ export class ChangePasswordPage implements OnInit {
 
     constructor(private fb: FormBuilder,
                 private authenticationService: AuthenticationService,
-                private sessionService: SessionService) {
+                private sessionService: SessionService,
+                private utilService: UtilService) {
     }
 
     ngOnInit() {
@@ -57,7 +59,7 @@ export class ChangePasswordPage implements OnInit {
         };
         this.authenticationService.changePassword(this.user.id, values).subscribe((response) => {
             console.log(response);
-            alert('Password changed successful.');
+            this.utilService.presentToast('Password changed successful.', 3000);
         }, error => {
             const keys = Object.keys(error.error);
             this.bkError = {
