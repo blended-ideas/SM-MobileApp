@@ -5,9 +5,8 @@ import {AuthGuard} from './services/routerGuards/auth-guard.service';
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'login',
         pathMatch: 'full',
-        canActivate: [AuthGuard],
     },
     {
         path: 'login',
@@ -15,8 +14,7 @@ const routes: Routes = [
     },
     {
         path: 'dashboard',
-        loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardPageModule),
-        canActivate: [AuthGuard]
+        loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardPageModule)
     },
     {
         path: 'product',
@@ -66,7 +64,7 @@ const routes: Routes = [
         path: 'manage-users',
         loadChildren: () => import('./pages/manage-users/manage-users.module').then(m => m.ManageUsersPageModule)
     },
-    {path: '**', redirectTo: '/dashboard', pathMatch: 'full'},
+    {path: '**', redirectTo: '/login', pathMatch: 'full'},
 ];
 
 @NgModule({

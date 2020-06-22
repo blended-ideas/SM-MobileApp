@@ -51,19 +51,26 @@ export class AuthenticationService {
     }
 
     refreshToken() {
-        this.sessionService.jwt_token_from_storage().then(data => {
-            console.log(JSON.parse(data.value));
-            const refreshToken = data.value ? JSON.parse(data.value).refresh : null;
-            if (refreshToken) {
-                this.httpClient.post<AuthTokenInterface>(USER_APIS.refreshToken, {refresh: refreshToken})
-                    .subscribe(token => {
-                        this.sessionService.token = {
-                            access: token.access,
-                            refresh: token.refresh
-                        };
-                        this.loginSubject.next({type: 'login', data: true});
-                    });
-            }
+        return new Promise((resolve, reject) => {
+            this.sessionService.jwt_token_from_storage().then(data => {
+                console.log(JSON.parse(data.value));
+                const refreshToken = data.value ? JSON.parse(data.value).refresh : null;
+                if (refreshToken) {
+                    this.httpClient.post<AuthTokenInterface>(USER_APIS.refreshToken, {refresh: refreshToken})
+                        .subscribe(token => {
+                            this.sessionService.token = {
+                                access: token.access,
+                                refresh: token.refresh
+                            };
+                            this.loginSubject.next({type: 'login', data: true});
+                            resolve();
+                        }, () => {
+                            reject();
+                        });
+                } else {
+                    reject();
+                }
+            });
         });
     }
 

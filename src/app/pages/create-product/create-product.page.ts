@@ -200,7 +200,6 @@ export class CreateProductPage implements OnInit {
         this.productService.getProductById(productId).subscribe(response => {
             this.initialLoading = false;
             this.product = response;
-            console.log(this.product.image);
             if (this.product.image) {
                 this.photo.viewImage = this.product.image;
             }

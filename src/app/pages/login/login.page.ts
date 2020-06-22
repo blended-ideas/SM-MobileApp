@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {delay} from 'rxjs/operators';
 import {SessionService} from '../../services/session.service';
 
 @Component({
@@ -27,7 +26,12 @@ export class LoginPage implements OnInit {
     }
 
     ngOnInit() {
-        this.authenticationService.clearCredentials();
+        // this.authenticationService.clearCredentials();
+        if (this.sessionService.token.access) {
+            this.authenticationService.refreshToken().then(() => {
+                this.router.navigate(['/dashboard']);
+            });
+        }
         this.loginForm = this.fb.group({
             username: ['', [Validators.required, Validators.maxLength(100)]],
             password: ['', [Validators.required, Validators.maxLength(100)]]

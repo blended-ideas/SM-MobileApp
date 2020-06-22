@@ -12,13 +12,11 @@ import {Subject} from 'rxjs';
     providedIn: 'root'
 })
 export class ImageService {
-    private fileLoaderSubject = new Subject<{ loaded: number, total: number }>();
 
     constructor(private transfer: FileTransfer,
                 private actionSheetCtrl: ActionSheetController,
                 private sessionService: SessionService,
-                private camera: Camera,
-                private zone: NgZone) {
+                private camera: Camera) {
     }
 
     getImage(restrictSize?: boolean) {
@@ -73,12 +71,6 @@ export class ImageService {
         };
 
         const fileTransfer: FileTransferObject = this.transfer.create();
-
-        fileTransfer.onProgress(res => {
-            this.zone.run(() => {
-                this.fileLoaderSubject.next({loaded: res.loaded, total: res.total});
-            });
-        });
         return fileTransfer.upload(fileURI, url, options, true);
     }
 
