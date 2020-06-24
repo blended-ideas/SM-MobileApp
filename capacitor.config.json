@@ -1,12 +1,15 @@
 {
   "appId": "in.blendedideas.sm",
-  "appName": "store-management",
+  "appName": "Mahamane",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
   "plugins": {
     "SplashScreen": {
-      "launchShowDuration": 0
+      "launchAutoHide": false,
+      "backgroundColor": "#ffffffff",
+      "splashFullScreen": true,
+      "splashImmersive": true
     }
   },
   "cordova": {}
