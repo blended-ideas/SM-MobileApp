@@ -5,13 +5,14 @@ import {SessionService} from '../../services/session.service';
 import {ProductInterface} from '../../interfaces/product.interface';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ProductService} from '../../services/product.service';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {UtilService} from '../../services/util.service';
 import {faEdit, faPlusSquare} from '@fortawesome/free-solid-svg-icons';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 import {PRODUCT_APIS} from '../../constants/api.constants';
 import {ImageService} from '../../services/image.service';
 import {CameraResultType, Plugins} from '@capacitor/core';
+import {Platform} from '@ionic/angular';
 
 const {Camera} = Plugins;
 
@@ -40,6 +41,7 @@ export class CreateProductPage implements OnInit {
         barcode_entry: []
     };
     photo: { id?: number, image: string; viewImage: string };
+    backButtonSubscription: Subscription;
 
     constructor(private sessionService: SessionService,
                 private fb: FormBuilder,
@@ -48,10 +50,17 @@ export class CreateProductPage implements OnInit {
                 private router: Router,
                 private utilService: UtilService,
                 private barcodeScanner: BarcodeScanner,
-                private imageService: ImageService) {
+                private imageService: ImageService,
+                private platform: Platform) {
     }
 
     ngOnInit() {
+        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            const url = this.router.url.split('/');
+            if (url.length < 2) {
+                this.router.navigate(['/product']);
+            }
+        });
         this.route.paramMap.subscribe(paramMap => {
             if (paramMap.has('productId')) {
                 this.mode = 'Edit';
@@ -85,7 +94,9 @@ export class CreateProductPage implements OnInit {
                 this.imageService.uploadFile(PRODUCT_APIS.product + response.id + '/modify_image/',
                     this.photo.image,
                     {}, 'file',
-                    'image/jpeg');
+                    'image/jpeg').then(() => {
+                    this.product.image = this.photo.viewImage;
+                });
             }
             this.isCreating = false;
             this.utilService.dismissLoading();
@@ -107,13 +118,6 @@ export class CreateProductPage implements OnInit {
     }
 
     async addImage() {
-        // this.imageService.getImage(true).then((results: { id?: number, image: string; viewImage: string }) => {
-        //     console.log(results);
-        //     this.photo = results;
-        // }).catch((err) => {
-        //     console.log(err, 'err');
-        //     this.utilService.presentToast('Something went wrong', 2000);
-        // });
         const camera = await Camera.getPhoto({
             quality: 90,
             allowEditing: true,
@@ -125,6 +129,17 @@ export class CreateProductPage implements OnInit {
         console.log(imagePath);
     }
 
+    ngOnDestroy() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
+    }
+
+    ionViewDidLeave() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
+    }
 
     private buildForm() {
         this.productForm = this.fb.group({
@@ -191,6 +206,9 @@ export class CreateProductPage implements OnInit {
             ],
 
         };
+        if (this.mode === 'Edit') {
+            this.productForm.controls['stock'].disable();
+        }
         console.log(this.productForm.controls);
     }
 
@@ -206,5 +224,4 @@ export class CreateProductPage implements OnInit {
             this.buildForm();
         });
     }
-
 }
