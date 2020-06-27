@@ -17,8 +17,8 @@ export class ReportService {
         return this.httpClient.get<MarginInterface>(REPORT_APIS.daily, {params});
     }
 
-    downloadExpiryReport(days: number): Observable<ExpiryReportInterface> {
-        return this.httpClient.post<ExpiryReportInterface>(REPORT_APIS.product_expiry_report, {days});
+    downloadExpiryReport(days: number, downloadAll: boolean): Observable<ExpiryReportInterface> {
+        return this.httpClient.post<ExpiryReportInterface>(REPORT_APIS.product_expiry_report, {days, downloadAll});
     }
 
     downloadSalesReport(postObj: object): Observable<SalesReportInterface> {

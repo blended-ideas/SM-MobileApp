@@ -4,27 +4,6 @@
             <ion-content>
                 <ion-img [src]="'/assets/logos/logoRectangleKannada.jpeg'"></ion-img>
                 <ion-list>
-                    <ion-item [routerDirection]="'forward'" [routerLink]="'/product'" (click)="menuClose()"
-                              *ngIf="isLoggedIn">
-                        <ion-label>
-                            <fa-icon [icon]="faShoppingCart"></fa-icon>&nbsp;
-                            Products
-                        </ion-label>
-                    </ion-item>
-                    <ion-item [routerDirection]="'forward'" [routerLink]="'/shift'" (click)="menuClose()"
-                              *ngIf="isLoggedIn">
-                        <ion-label>
-                            <fa-icon [icon]="faPenAlt"></fa-icon>&nbsp;
-                            Shifts
-                        </ion-label>
-                    </ion-item>
-                    <ion-item [routerDirection]="'forward'" [routerLink]="'/margin'" (click)="menuClose()"
-                              *ngIf="isLoggedIn && viewMargin">
-                        <ion-label>
-                            <fa-icon [icon]="faFileExcel"></fa-icon>&nbsp;
-                            Margin
-                        </ion-label>
-                    </ion-item>
                     <ion-item [routerDirection]="'forward'" [routerLink]="'/profile'" (click)="menuClose()"
                               *ngIf="isLoggedIn && isAdmin">
                         <ion-label>

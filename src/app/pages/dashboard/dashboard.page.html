@@ -19,6 +19,32 @@
 </ion-header>
 
 <ion-content>
+    <ion-card [routerDirection]="'forward'" [routerLink]="'/product'" *ngIf="isLoggedIn">
+        <ion-card-header>
+            <ion-card-title class="ion-text-center ion-margin">
+                <fa-icon [icon]="faShoppingCart"></fa-icon>&nbsp;
+                Products
+            </ion-card-title>
+        </ion-card-header>
+    </ion-card>
+    <ion-card [routerDirection]="'forward'" [routerLink]="'/shift'"
+              *ngIf="isLoggedIn">
+        <ion-card-header>
+            <ion-card-title class="ion-text-center ion-margin">
+                <fa-icon [icon]="faPenAlt"></fa-icon>&nbsp;
+                Shifts
+            </ion-card-title>
+        </ion-card-header>
+    </ion-card>
+    <ion-card [routerDirection]="'forward'" [routerLink]="'/margin'"
+              *ngIf="isLoggedIn && viewMargin">
+        <ion-card-header>
+            <ion-card-title class="ion-text-center ion-margin">
+                <fa-icon [icon]="faFileExcel"></fa-icon>&nbsp;
+                Margin
+            </ion-card-title>
+        </ion-card-header>
+    </ion-card>
     <ion-list>
         <ion-list-header style="font-size: 16px; font-weight: 600">Products Expiring over next 10 days:
         </ion-list-header>
@@ -35,15 +61,17 @@
                 [loadingText]="'Loading more products...'">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
-</ion-content>
-<ion-footer>
     <div class="ion-text-right">
-        <ion-button type="button" color="dark" (click)="downloadExpiryReport()"
+        <ion-button type="button" color="dark" (click)="downloadExpiryReport(false)"
                     *ngIf="!isReportDownloading; else showSpin">Download
-            Report
+            10 Days
+        </ion-button>
+        <ion-button type="button" color="dark" (click)="downloadExpiryReport(true)"
+                    *ngIf="!isReportDownloading; else showSpin">Download
+            All
         </ion-button>
         <ng-template #showSpin>
             <ion-spinner *ngIf="isReportDownloading"></ion-spinner>
         </ng-template>
     </div>
-</ion-footer>
+</ion-content>
