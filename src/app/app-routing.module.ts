@@ -45,8 +45,8 @@ const routes: Routes = [
         loadChildren: () => import('./pages/create-shift/create-shift.module').then(m => m.CreateShiftPageModule)
     },
     {
-        path: 'create-shift/:shiftId',
-        loadChildren: () => import('./pages/create-shift/create-shift.module').then(m => m.CreateShiftPageModule)
+        path: 'edit-shift/:shiftId',
+        loadChildren: () => import('./pages/edit-shift/edit-shift.module').then(m => m.EditShiftPageModule)
     },
     {
         path: 'view-shift/:shiftId',

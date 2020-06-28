@@ -1,14 +1,16 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 import {ShiftDetailInterface} from '../interfaces/shift.interface';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {SHIFT_APIS} from '../constants/api.constants';
 import {PaginatedResponseInterface} from '../interfaces/paginatedResponse.interface';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ShiftService {
+export class ShiftService implements OnDestroy {
+    shiftSubject = new Subject<{ type: string, shift: ShiftDetailInterface }>();
 
     constructor(private httpClient: HttpClient) {
     }
@@ -21,11 +23,19 @@ export class ShiftService {
     }
 
     createShift(postObj: object): Observable<ShiftDetailInterface> {
-        return this.httpClient.post<ShiftDetailInterface>(SHIFT_APIS.detail, postObj);
+        return this.httpClient.post<ShiftDetailInterface>(SHIFT_APIS.detail, postObj).pipe(tap(response => {
+            this.shiftSubject.next({type: 'create', shift: response});
+        }));
     }
 
     updateShift(id: string, patchObj: object): Observable<ShiftDetailInterface> {
-        return this.httpClient.patch<ShiftDetailInterface>(SHIFT_APIS.detail + id + '/', patchObj);
+        return this.httpClient.patch<ShiftDetailInterface>(SHIFT_APIS.detail + id + '/', patchObj).pipe(tap(response => {
+            this.shiftSubject.next({type: 'update', shift: response});
+        }));
+    }
+
+    getShiftObservable() {
+        return this.shiftSubject.asObservable();
     }
 
     getShiftById(id: string): Observable<ShiftDetailInterface> {
@@ -35,4 +45,10 @@ export class ShiftService {
     approveShift(shiftId: string) {
         return this.httpClient.patch<ShiftDetailInterface>(`${SHIFT_APIS.detail}${shiftId}/${SHIFT_APIS.approve}/`, {});
     }
+
+    ngOnDestroy(): void {
+        console.log('shift service: On Destroy');
+        this.shiftSubject.complete();
+    }
+
 }

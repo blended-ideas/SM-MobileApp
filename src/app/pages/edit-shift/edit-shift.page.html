@@ -1,12 +1,12 @@
 <ion-header>
     <ion-toolbar>
         <ion-back-button slot="start"></ion-back-button>
-        <ion-title>Create Shift</ion-title>
+        <ion-title>Edit Shift</ion-title>
         <ion-buttons slot="end">
-            <ion-button [size]="'small'" [fill]="'solid'" (click)="createShift()" type="submit"
+            <ion-button [size]="'small'" [fill]="'solid'" (click)="editShift()" type="submit"
                         [disabled]="shiftForm?.invalid || disableButton">
-                <fa-icon [icon]="faPlusSquare"></fa-icon>&nbsp;
-                Create
+                <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
+                Edit
             </ion-button>
         </ion-buttons>
 
@@ -14,43 +14,42 @@
 </ion-header>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col>
-                <ion-item class="ion-no-padding">
-                    <ion-label>Shift Date</ion-label>
-                    <ion-datetime displayFormat="DD/MM/YYYY" name="shiftDate"
-                                  [max]="today"
-                                  [(ngModel)]="shiftDate"
-                                  (ionChange)="shiftChange(selectedShiftTiming)">
-                    </ion-datetime>
-                </ion-item>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col>
-                <ion-item class="ion-no-padding">
-                    <ion-label position="floating">Select Shift</ion-label>
-                    <ion-select name="selectedShiftTiming" (ionChange)="shiftChange(selectedShiftTiming)"
-                                [(ngModel)]="selectedShiftTiming">
-                        <ion-select-option *ngFor="let shift of SHIFT_TIMINGS" [value]="shift">
-                            {{shift.display}} ({{shift.display2}})
-                        </ion-select-option>
-                    </ion-select>
-                </ion-item>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col>
-                <div class="ion-text-center">
-                    <ion-button color="dark" (click)="selectProducts()">Select Product</ion-button>
-                </div>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-    <hr/>
-    <form #shiftForm="ngForm" class="border-top pt-2"
-          id="createShiftForm">
+    <form *ngIf="shiftForm" [formGroup]="shiftForm" id="createShiftForm">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label>Shift End</ion-label>
+                        <ion-datetime displayFormat="DD/MM/YYYY hh:mm a" name="start_date"
+                                      formControlName="start_date"
+                                      [max]="today">
+                        </ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item class="ion-no-padding form-group">
+                        <ion-label>Shift End</ion-label>
+                        <ion-datetime displayFormat="DD/MM/YYYY hh:mm a" name="end_date"
+                                      formControlName="end_date"
+                                      [max]="today">
+                        </ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <div class="ion-text-center">
+                        <ion-button color="dark" (click)="selectProducts()">Select Product</ion-button>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <hr/>
+    </form>
+    <form #entryForm="ngForm">
         <ion-card *ngIf="selectedProducts?.length > 0">
             <ion-card-header>Products Sold</ion-card-header>
             <ion-card-content>

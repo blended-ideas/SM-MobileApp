@@ -45,7 +45,7 @@
             </ion-card-title>
         </ion-card-header>
     </ion-card>
-    <ion-list>
+    <ion-list *ngIf="productExpiryDates?.length > 0">
         <ion-list-header style="font-size: 16px; font-weight: 600">Products Expiring over next 10 days:
         </ion-list-header>
         <ion-item *ngFor="let expiryDate of productExpiryDates">
@@ -61,7 +61,7 @@
                 [loadingText]="'Loading more products...'">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
-    <div class="ion-text-right">
+    <div class="ion-text-right" *ngIf="productExpiryDates?.length > 0">
         <ion-button type="button" color="dark" (click)="downloadExpiryReport(false)"
                     *ngIf="!isReportDownloading; else showSpin">Download
             10 Days

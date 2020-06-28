@@ -1,14 +1,17 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ProductExpiryDateInterface, ProductInterface, ProductStockChangeInterface} from '../interfaces/product.interface';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {PaginatedResponseInterface} from '../interfaces/paginatedResponse.interface';
 import {PRODUCT_APIS} from '../constants/api.constants';
+import {ShiftDetailInterface} from '../interfaces/shift.interface';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProductService {
+export class ProductService implements OnDestroy {
+    productSubject = new Subject<{ type: string, product: ProductInterface }>();
 
     constructor(private httpClient: HttpClient) {
     }
@@ -26,13 +29,20 @@ export class ProductService {
 
 
     createProducts(postObj: object): Observable<ProductInterface> {
-        return this.httpClient.post<ProductInterface>(PRODUCT_APIS.product, postObj);
+        return this.httpClient.post<ProductInterface>(PRODUCT_APIS.product, postObj).pipe(tap(response => {
+            this.productSubject.next({type: 'create', product: response});
+        }));
     }
 
     updateProduct(id: string, patchObj: object): Observable<ProductInterface> {
-        return this.httpClient.patch<ProductInterface>(PRODUCT_APIS.product + id + '/', patchObj);
+        return this.httpClient.patch<ProductInterface>(PRODUCT_APIS.product + id + '/', patchObj).pipe(tap(response => {
+            this.productSubject.next({type: 'update', product: response});
+        }));
     }
 
+    getProductObservable() {
+        return this.productSubject.asObservable();
+    }
 
     getProductStockChanges(params?: HttpParams, link?: string): Observable<PaginatedResponseInterface<ProductStockChangeInterface>> {
         if (link) {
@@ -58,5 +68,10 @@ export class ProductService {
 
     postExpiry(postObj): Observable<ProductExpiryDateInterface> {
         return this.httpClient.post<ProductExpiryDateInterface>(PRODUCT_APIS.product_expiry, postObj);
+    }
+
+    ngOnDestroy(): void {
+        console.log('product service: On Destroy');
+        this.productSubject.complete();
     }
 }

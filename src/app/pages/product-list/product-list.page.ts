@@ -43,6 +43,7 @@ export class ProductListPage implements OnInit, OnDestroy {
     next: string;
     sort: string;
     backButtonSubscription: Subscription;
+    productSubscription: Subscription;
 
     constructor(private productService: ProductService,
                 private sessionService: SessionService,
@@ -51,18 +52,22 @@ export class ProductListPage implements OnInit, OnDestroy {
                 private popoverController: PopoverController,
                 private platform: Platform,
                 private barcodeScanner: BarcodeScanner) {
-    }
-
-    ngOnInit() {
-        this.fetchProducts(true);
-        this.viewEdit = this.sessionService.isAdmin() || this.sessionService.isAuditor();
-        this.allowCreate = this.sessionService.isAdmin() || this.sessionService.isAuditor();
         this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
             console.log(this.router.url, 'product');
             if (this.router.url === '/product') {
                 this.router.navigate(['/dashboard']);
             }
         });
+    }
+
+    ngOnInit() {
+        this.productSubscription = this.productService.getProductObservable().subscribe(data => {
+            console.log('inside subscription');
+            this.fetchProducts(true);
+        });
+        this.fetchProducts(true);
+        this.viewEdit = this.sessionService.isAdmin() || this.sessionService.isAuditor();
+        this.allowCreate = this.sessionService.isAdmin() || this.sessionService.isAuditor();
     }
 
     fetchProducts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
@@ -139,8 +144,10 @@ export class ProductListPage implements OnInit, OnDestroy {
     ngOnDestroy() {
         console.log('in');
         if (this.backButtonSubscription) {
-            console.log('inside');
             this.backButtonSubscription.unsubscribe();
+        }
+        if (this.productSubscription) {
+            this.productSubscription.unsubscribe();
         }
     }
 
@@ -149,5 +156,9 @@ export class ProductListPage implements OnInit, OnDestroy {
             console.log('inside');
             this.backButtonSubscription.unsubscribe();
         }
+    }
+
+    searchProduct() {
+        this.fetchProducts(true);
     }
 }

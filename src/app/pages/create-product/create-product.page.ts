@@ -220,6 +220,7 @@ export class CreateProductPage implements OnInit {
             this.product = response;
             if (this.product.image) {
                 this.photo.viewImage = this.product.image;
+                this.photo.image = this.product.image;
             }
             this.buildForm();
         });

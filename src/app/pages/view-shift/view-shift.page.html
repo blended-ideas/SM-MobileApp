@@ -7,7 +7,7 @@
 
 <ion-content *ngIf="shift">
     <div class="ion-text-right">
-        <ion-button color="dark" size="small" *ngIf="allowEdit && shift" [routerLink]="['/create-shift', shift.id]">
+        <ion-button color="dark" size="small" *ngIf="allowEdit && shift" [routerLink]="['/edit-shift', shift.id]">
             <fa-icon [icon]="faEdit"></fa-icon>&nbsp;Edit
         </ion-button>
         <ion-button color="secondary" size="small" (click)="approveShift()"

@@ -16,12 +16,11 @@
                 <ion-button (click)="showAlert()" [fill]="'clear'" [size]="'small'" color="dark">Sort</ion-button>
             </ion-col>
             <ion-col size="10">
-                <ion-searchbar [debounce]="500"
-                               (ionChange)="fetchProducts(true)"
-                               [(ngModel)]="searchText"
+                <ion-searchbar [(ngModel)]="searchText"
                                (ionCancel)="onCancelSearch($event)"
                                [searchIcon]="'Search'"
                                [placeholder]="'Search for Products/Service'"
+                               (search)="fetchProducts(true)"
                                animated></ion-searchbar>
             </ion-col>
         </ion-row>

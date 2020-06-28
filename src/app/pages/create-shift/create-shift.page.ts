@@ -1,14 +1,14 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {faEdit, faPlusSquare, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
-import {ShiftDetailInterface} from '../../interfaces/shift.interface';
+import {faPlusSquare, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
 import {ModalController} from '@ionic/angular';
 import {ProductSelectorComponent} from '../../components/product-selector/product-selector.component';
-import {ProductInterface} from '../../interfaces/product.interface';
 import {UtilService} from '../../services/util.service';
 import {SessionService} from '../../services/session.service';
 import {ShiftService} from '../../services/shift.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
+import {SHIFT_TIMINGS, ShiftSelectionInterface} from 'src/app/constants/shift.constants';
+import * as moment from 'moment';
+import {NgForm} from '@angular/forms';
 
 @Component({
     selector: 'app-create-shift',
@@ -17,77 +17,50 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class CreateShiftPage implements OnInit {
     faPlusSquare = faPlusSquare;
-    faEdit = faEdit;
     faTimesCircle = faTimesCircle;
-    mode: 'Create' | 'Edit' = 'Create';
-    shiftForm: FormGroup;
-    shift: ShiftDetailInterface;
-    today = new Date().toISOString();
-    validationMessages = {
-        start_date: [],
-        start_time: [],
-        end_date: [],
-        end_time: [],
-        entries: [],
+    shiftView: {
+        startTime: Date
+        endTime: Date
     };
+    today: string;
     selectedProducts: { id?: string, name: string, product: string, quantity: number, checked?: boolean, stock: number, condition: string }[] = [];
-    @ViewChild('entryForm', {static: false}) entryForm: NgForm;
     disableButton: boolean;
+    SHIFT_TIMINGS = SHIFT_TIMINGS;
+    selectedShiftTiming = SHIFT_TIMINGS[0];
+    shiftDate: any;
+    isCreating: boolean;
+    @ViewChild('shiftForm', {static: false}) shiftForm: NgForm;
 
-    constructor(private fb: FormBuilder,
-                private modalController: ModalController,
+    constructor(private modalController: ModalController,
                 private utilService: UtilService,
                 private sessionService: SessionService,
                 private shiftService: ShiftService,
-                private router: Router,
-                private route: ActivatedRoute) {
+                private router: Router) {
     }
 
     ngOnInit() {
-        this.route.paramMap.subscribe(paramMap => {
-            if (paramMap.has('shiftId')) {
-                this.mode = 'Edit';
-                this.fetchShift(paramMap.get('shiftId'));
-            } else {
-                this.buildForm();
-            }
-        });
+        this.today = new Date().toISOString();
+        this.shiftDate = new Date().toISOString();
+        this.shiftChange(this.selectedShiftTiming);
     }
 
-    fetchShift(id) {
-        this.shiftService.getShiftById(id).subscribe(response => {
-            this.shift = response;
-            console.log(this.shift);
-            if (this.shift) {
-                this.buildForm();
-            }
-        });
-    }
-
-    buildForm() {
-        this.shiftForm = this.fb.group({
-            start_date: [this.shift && this.shift.start_dt ? this.shift.start_dt : this.today, Validators.required],
-            end_date: [this.shift && this.shift.end_dt ? this.shift.end_dt : this.today, Validators.required],
-        });
-        this.selectedProducts = this.shift && this.shift.entries.length !== 0 ? this.shift.entries.map(e => ({
-            id: e.id,
-            name: e.product_name,
-            product: e.product,
-            quantity: e.quantity,
-            checked: true,
-            stock: e.product_available_stock,
-            condition: 'EDIT'
-        })) : [];
+    shiftChange(shiftTime: ShiftSelectionInterface) {
+        const dt = new Date(this.shiftDate);
+        const strtDate = new Date(
+            dt.getUTCFullYear(),
+            dt.getUTCMonth(),
+            dt.getUTCDate(),
+            shiftTime.time_start_hour,
+            0,
+            0);
+        this.shiftView = {
+            startTime: strtDate,
+            endTime: (moment(strtDate).add(shiftTime.number_of_hours, 'hours')).toDate()
+        };
     }
 
     createShift() {
-        this.shiftForm.markAllAsTouched();
-        if (this.shiftForm.invalid) {
-            this.utilService.presentToast('Fill all the required fields', 3000);
-            return;
-        }
-        console.log(this.entryForm);
-        if (this.entryForm.invalid) {
+        if (this.shiftForm && this.shiftForm.invalid) {
             this.utilService.presentToast('Fill all the required fields', 3000);
             return;
         }
@@ -95,53 +68,31 @@ export class CreateShiftPage implements OnInit {
             this.utilService.presentToast('Select product', 3000);
             return;
         }
-        const formValue = this.shiftForm.getRawValue();
-        if (formValue.start_date > formValue.end_date) {
-            alert('Start date cannot be less than end date');
+        const dateNow = new Date();
+        if (this.shiftView.startTime > this.shiftView.endTime) {
+            alert('End date/time cannot be less than start date/time');
             return;
         }
-        if (this.today < formValue.start_date || this.today < formValue.start_date) {
+        if (dateNow < this.shiftView.startTime || dateNow < this.shiftView.endTime) {
             alert('Start date and end date should be greater than current date-time');
             return;
         }
-        console.log(this.selectedProducts);
-        console.log(this.selectedProducts.map(p => ({product: p.product, quantity: p.quantity})));
-        this.utilService.presentLoading(this.mode === 'Create' ? 'Creating shift' : 'Saving shift');
-        if (this.mode === 'Create') {
-            const postObj = {
-                user: this.sessionService.user.id,
-                start_dt: formValue.start_date,
-                end_dt: formValue.end_date,
-                entries: this.selectedProducts.map(p => ({product: p.product, quantity: p.quantity}))
-            };
-            this.shiftService.createShift(postObj).subscribe(response => {
-                this.utilService.presentToast('Shift Created Successfully', 2000);
-                this.utilService.dismissLoading();
-                this.router.navigate(['/shift']);
-            }, () => {
-                this.utilService.dismissLoading();
-            });
-        } else {
-            const patchObj = {
-                start_dt: formValue.start_date,
-                end_dt: formValue.end_date,
-                entries: this.selectedProducts.map(p => ({
-                    id: p.id,
-                    product: p.product,
-                    quantity: p.quantity,
-                    product_name: p.name,
-                    condition: p.condition
-                }))
-            };
-            this.shiftService.updateShift(this.shift.id, patchObj).subscribe(response => {
-                this.utilService.presentToast('Shift Updated Successfully', 2000);
-                this.utilService.dismissLoading();
-                this.router.navigate(['/shift']);
-            }, () => {
-                this.utilService.dismissLoading();
-            });
-        }
-
+        const postObj = {
+            user: this.sessionService.user.id,
+            start_dt: this.shiftView.startTime.toISOString(),
+            end_dt: this.shiftView.endTime.toISOString(),
+            entries: this.selectedProducts.map(p => ({
+                product: p.product,
+                quantity: p.quantity,
+            }))
+        };
+        this.shiftService.createShift(postObj).subscribe(response => {
+            this.utilService.presentToast('Shift Created Successfully', 2000);
+            this.utilService.dismissLoading();
+            this.router.navigate(['/shift']);
+        }, () => {
+            this.utilService.dismissLoading();
+        });
     }
 
     async selectProducts() {
