@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import {faPlusSquare, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
-import {ModalController} from '@ionic/angular';
+import {ModalController, Platform} from '@ionic/angular';
 import {ProductSelectorComponent} from '../../components/product-selector/product-selector.component';
 import {UtilService} from '../../services/util.service';
 import {SessionService} from '../../services/session.service';
@@ -9,13 +9,14 @@ import {Router} from '@angular/router';
 import {SHIFT_TIMINGS, ShiftSelectionInterface} from 'src/app/constants/shift.constants';
 import * as moment from 'moment';
 import {NgForm} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-create-shift',
     templateUrl: './create-shift.page.html',
     styleUrls: ['./create-shift.page.scss'],
 })
-export class CreateShiftPage implements OnInit {
+export class CreateShiftPage implements OnInit, OnDestroy {
     faPlusSquare = faPlusSquare;
     faTimesCircle = faTimesCircle;
     shiftView: {
@@ -30,12 +31,21 @@ export class CreateShiftPage implements OnInit {
     shiftDate: any;
     isCreating: boolean;
     @ViewChild('shiftForm', {static: false}) shiftForm: NgForm;
+    backButtonSubscription: Subscription;
 
     constructor(private modalController: ModalController,
                 private utilService: UtilService,
                 private sessionService: SessionService,
                 private shiftService: ShiftService,
-                private router: Router) {
+                private router: Router,
+                private platform: Platform) {
+        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            const url = this.router.url.split('/');
+            console.log(url);
+            if (url[1] === 'create-shift') {
+                this.router.navigate(['/shift']);
+            }
+        });
     }
 
     ngOnInit() {
@@ -115,6 +125,18 @@ export class CreateShiftPage implements OnInit {
         const index = this.selectedProducts.findIndex(sp => sp.id === product.id);
         if (index > -1) {
             this.selectedProducts.splice(index, 1);
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
+    }
+
+    ionViewDidLeave() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
         }
     }
 

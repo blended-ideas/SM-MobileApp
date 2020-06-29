@@ -1,30 +1,41 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ShiftService} from '../../services/shift.service';
 import {ShiftDetailInterface} from '../../interfaces/shift.interface';
 import {UtilService} from '../../services/util.service';
 import {SessionService} from '../../services/session.service';
 import {faCheck, faEdit} from '@fortawesome/free-solid-svg-icons';
-import {AlertController} from '@ionic/angular';
+import {AlertController, Platform} from '@ionic/angular';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-view-shift',
     templateUrl: './view-shift.page.html',
     styleUrls: ['./view-shift.page.scss'],
 })
-export class ViewShiftPage implements OnInit {
+export class ViewShiftPage implements OnInit, OnDestroy {
     shift: ShiftDetailInterface;
     allowEdit: boolean;
     faEdit = faEdit;
     faCheck = faCheck;
     isAdmin: boolean;
     isAuditor: boolean;
+    backButtonSubscription: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private shiftService: ShiftService,
                 private utilService: UtilService,
                 private sessionService: SessionService,
-                private alertController: AlertController) {
+                private alertController: AlertController,
+                private platform: Platform,
+                private router: Router) {
+        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            const url = this.router.url.split('/');
+            console.log(url);
+            if (url[1] === 'view-shift') {
+                this.router.navigate(['/shift']);
+            }
+        });
     }
 
     ngOnInit() {
@@ -73,6 +84,18 @@ export class ViewShiftPage implements OnInit {
         });
         await alert.present();
 
+    }
+
+    ngOnDestroy() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
+    }
+
+    ionViewDidLeave() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
     }
 
     private checkAllowEdit() {

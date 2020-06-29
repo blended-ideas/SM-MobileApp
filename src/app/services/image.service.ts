@@ -37,7 +37,7 @@ export class ImageService {
         };
 
         const fileTransfer: FileTransferObject = this.transfer.create();
-        return fileTransfer.upload(fileURI, url, options, true);
+        return fileTransfer.upload(fileURI, url, options, true).then();
     }
 
 }

@@ -11,7 +11,7 @@ import {tap} from 'rxjs/operators';
     providedIn: 'root'
 })
 export class ProductService implements OnDestroy {
-    productSubject = new Subject<{ type: string, product: ProductInterface }>();
+    productSubject = new Subject<{ type: string, product: ProductInterface, image?: string }>();
 
     constructor(private httpClient: HttpClient) {
     }
@@ -29,15 +29,11 @@ export class ProductService implements OnDestroy {
 
 
     createProducts(postObj: object): Observable<ProductInterface> {
-        return this.httpClient.post<ProductInterface>(PRODUCT_APIS.product, postObj).pipe(tap(response => {
-            this.productSubject.next({type: 'create', product: response});
-        }));
+        return this.httpClient.post<ProductInterface>(PRODUCT_APIS.product, postObj);
     }
 
     updateProduct(id: string, patchObj: object): Observable<ProductInterface> {
-        return this.httpClient.patch<ProductInterface>(PRODUCT_APIS.product + id + '/', patchObj).pipe(tap(response => {
-            this.productSubject.next({type: 'update', product: response});
-        }));
+        return this.httpClient.patch<ProductInterface>(PRODUCT_APIS.product + id + '/', patchObj);
     }
 
     getProductObservable() {

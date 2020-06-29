@@ -52,15 +52,16 @@ export class CreateProductPage implements OnInit {
                 private barcodeScanner: BarcodeScanner,
                 private imageService: ImageService,
                 private platform: Platform) {
-    }
-
-    ngOnInit() {
         this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
             const url = this.router.url.split('/');
-            if (url.length < 2) {
+            console.log(url);
+            if (url[1] === 'create-product') {
                 this.router.navigate(['/product']);
             }
         });
+    }
+
+    ngOnInit() {
         this.route.paramMap.subscribe(paramMap => {
             if (paramMap.has('productId')) {
                 this.mode = 'Edit';
@@ -96,6 +97,8 @@ export class CreateProductPage implements OnInit {
                     {}, 'file',
                     'image/jpeg').then(() => {
                     this.product.image = this.photo.viewImage;
+                }).then(() => {
+                    this.productService.productSubject.next({type: 'create', product: response, image: this.product.image});
                 });
             }
             this.isCreating = false;

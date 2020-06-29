@@ -63,14 +63,20 @@ export class ProductListPage implements OnInit, OnDestroy {
     ngOnInit() {
         this.productSubscription = this.productService.getProductObservable().subscribe(data => {
             console.log('inside subscription');
-            this.fetchProducts(true);
+            // if (data.type === 'create') {
+            //
+            // } else {
+            //     const product = this.products.find(p => p.id === data.product.id);
+            //     product.image = data.image;
+            // }
+            this.fetchProducts(true, null, null, true, data);
         });
         this.fetchProducts(true);
         this.viewEdit = this.sessionService.isAdmin() || this.sessionService.isAuditor();
         this.allowCreate = this.sessionService.isAdmin() || this.sessionService.isAuditor();
     }
 
-    fetchProducts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
+    fetchProducts(emptyArray?: boolean, link?: string, infiniteScroll?: any, fromSub?: boolean, data?: { type: string, product: ProductInterface, image?: string }) {
         this.isLoading = true;
         this.utilService.presentLoading('Loading Products...');
         if (emptyArray) {
@@ -89,6 +95,10 @@ export class ProductListPage implements OnInit, OnDestroy {
             this.products = this.products.concat(response.results);
             this.next = response.next;
             console.log(this.products);
+            if (fromSub) {
+                const product = this.products.find(p => p.id === data.product.id);
+                product.image = data.image;
+            }
             if (infiniteScroll) {
                 infiniteScroll.target.complete();
             }

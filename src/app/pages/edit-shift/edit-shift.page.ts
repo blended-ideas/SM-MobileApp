@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import {faEdit, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ShiftService} from '../../services/shift.service';
@@ -6,14 +6,15 @@ import {ShiftDetailInterface} from '../../interfaces/shift.interface';
 import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {UtilService} from '../../services/util.service';
 import {ProductSelectorComponent} from '../../components/product-selector/product-selector.component';
-import {ModalController} from '@ionic/angular';
+import {ModalController, Platform} from '@ionic/angular';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-edit-shift',
     templateUrl: './edit-shift.page.html',
     styleUrls: ['./edit-shift.page.scss'],
 })
-export class EditShiftPage implements OnInit {
+export class EditShiftPage implements OnInit, OnDestroy {
     selectedProducts: { id?: string, name: string, product: string, quantity: number, checked?: boolean, stock: number, condition: string }[] = [];
     faEdit = faEdit;
     faTimesCircle = faTimesCircle;
@@ -22,13 +23,22 @@ export class EditShiftPage implements OnInit {
     today = new Date().toISOString();
     disableButton: boolean;
     @ViewChild('entryForm', {static: false}) entryForm: NgForm;
+    backButtonSubscription: Subscription;
 
     constructor(private route: ActivatedRoute,
                 private shiftService: ShiftService,
                 private fb: FormBuilder,
                 private utilService: UtilService,
                 private router: Router,
-                private modalController: ModalController) {
+                private modalController: ModalController,
+                private platform: Platform) {
+        this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
+            const url = this.router.url.split('/');
+            console.log(url);
+            if (url[1] === 'edit-shift') {
+                this.router.navigate(['/shift']);
+            }
+        });
     }
 
     ngOnInit() {
@@ -129,6 +139,18 @@ export class EditShiftPage implements OnInit {
         const index = this.selectedProducts.findIndex(sp => sp.id === product.id);
         if (index > -1) {
             this.selectedProducts.splice(index, 1);
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
+        }
+    }
+
+    ionViewDidLeave() {
+        if (this.backButtonSubscription) {
+            this.backButtonSubscription.unsubscribe();
         }
     }
 }
