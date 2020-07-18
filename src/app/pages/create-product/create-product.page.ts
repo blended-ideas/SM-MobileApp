@@ -91,7 +91,7 @@ export class CreateProductPage implements OnInit {
         }
         apiCall.subscribe(response => {
             this.utilService.presentToast(successMessage, 2000);
-            if (this.photo) {
+            if (this.photo && this.photo.image) {
                 this.imageService.uploadFile(PRODUCT_APIS.product + response.id + '/modify_image/',
                     this.photo.image,
                     {}, 'file',
@@ -104,8 +104,17 @@ export class CreateProductPage implements OnInit {
             this.isCreating = false;
             this.utilService.dismissLoading();
             this.router.navigate(['/product']);
-        }, () => {
-            this.utilService.presentToast('Something went wrong while creating the product/service', 2000);
+        }, (err) => {
+            let errStr = 'Something went wrong while creating the product/service';
+            if (err.status === 400) {
+                const keys = Object.keys(err.error);
+                errStr = err.error[keys[0]][0];
+            }
+            this.utilService.presentToast(errStr, null, [{
+                icon: 'close',
+                handler: () => {
+                }
+            }]);
             this.utilService.dismissLoading();
             this.isCreating = false;
         });

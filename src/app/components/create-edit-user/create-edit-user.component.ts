@@ -4,6 +4,7 @@ import {UserInterface, UserRoleInterface} from '../../interfaces/user.interface'
 import {UserService} from '../../services/user.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
+import {UtilService} from '../../services/util.service';
 
 @Component({
     selector: 'app-create-edit-user',
@@ -26,7 +27,8 @@ export class CreateEditUserComponent implements OnInit {
 
     constructor(private modalController: ModalController,
                 private userService: UserService,
-                private fb: FormBuilder) {
+                private fb: FormBuilder,
+                private utilService: UtilService) {
     }
 
     ngOnInit() {
@@ -57,6 +59,17 @@ export class CreateEditUserComponent implements OnInit {
 
         apiCall.subscribe(response => {
             this.modalController.dismiss(response);
+        }, (err) => {
+            let errStr = 'Something went wrong while creating the product/service';
+            if (err.status === 400) {
+                const keys = Object.keys(err.error);
+                errStr = err.error[keys[0]][0];
+            }
+            this.utilService.presentToast(errStr, null, [{
+                icon: 'close',
+                handler: () => {
+                }
+            }]);
         });
     }
 

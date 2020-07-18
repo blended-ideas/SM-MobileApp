@@ -54,13 +54,14 @@ export class UtilService {
         await alert.present();
     }
 
-    async presentToast(message: string, duration: number) {
+    async presentToast(message: string, duration?: number, buttons?: any) {
         const toast = await this.toastController.create({
             message,
             duration,
-            color: 'dark'
+            color: 'dark',
+            buttons
         });
-        toast.present();
+        await toast.present();
     }
 
 }
