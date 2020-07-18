@@ -7,12 +7,16 @@
 
 <ion-content *ngIf="shift">
     <div class="ion-text-right">
-        <ion-button color="dark" size="small" *ngIf="allowEdit && shift" [routerLink]="['/edit-shift', shift.id]">
-            <fa-icon [icon]="faEdit"></fa-icon>&nbsp;Edit
-        </ion-button>
+        <!--        <ion-button color="dark" size="small" *ngIf="allowEdit && shift" [routerLink]="['/edit-shift', shift.id]">-->
+        <!--            <fa-icon [icon]="faEdit"></fa-icon>&nbsp;Edit-->
+        <!--        </ion-button>-->
         <ion-button color="secondary" size="small" (click)="approveShift()"
-                    *ngIf="shift && !shift.approved && (isAdmin || isAuditor)">
+                    *ngIf="shift && shift?.status === 'WAITING_FOR_APPROVAL' && (isAdmin || isAuditor)">
             <fa-icon [icon]="faCheck"></fa-icon>&nbsp;Approve
+        </ion-button>
+        <ion-button color="secondary" size="small" (click)="closeShift()"
+                    *ngIf="shift && shift?.status === 'NEW'">
+            Close Shift
         </ion-button>
     </div>
     <ion-grid>
@@ -44,8 +48,16 @@
             <ion-col size="5"><strong>Retailer Margin:</strong></ion-col>
             <ion-col size="7">{{shift.retailer_margin_total | inr}}</ion-col>
         </ion-row>
+        <ion-row *ngIf="shift?.status === 'NEW'">
+            <ion-col>
+                <div class="ion-text-center">
+                    <ion-button color="dark" (click)="selectProducts()">Select Product</ion-button>
+                </div>
+            </ion-col>
+        </ion-row>
         <ion-list>
-            <ion-list-header>Products Sold:</ion-list-header>
+            <ion-list-header>Products Sold:&nbsp; <span *ngIf="shift.entries.length === 0">No Products Sold</span>
+            </ion-list-header>
             <ion-item *ngFor="let entry of shift.entries">
                 <ion-label>
                     <h2 style="padding-left: 6px;!important;font-size: 18px !important;font-weight: 400!important;">{{entry.product_name}}</h2>
@@ -58,8 +70,14 @@
                         <ion-col size="6"><h3>Retailer Margin:&nbsp;{{entry.distributor_margin}}%</h3></ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col size="6"></ion-col>
-                        <ion-col size="6"><h3>Total:&nbsp;{{entry.entry_total|inr}}</h3></ion-col>
+                        <ion-col size="6">
+                            <div class="ion-text-center" *ngIf="shift.status !== 'APPROVED' || isAdmin">
+                                <ion-button size="small" [color]="'dark'" (click)="quantityUpdate(entry)">
+                                    <fa-icon [icon]="faEdit"></fa-icon>
+                                </ion-button>
+                            </div>
+                        </ion-col>
+                        <ion-col size="6" style="margin: auto"><h3>Total:&nbsp;{{entry.entry_total|inr}}</h3></ion-col>
                     </ion-row>
                 </ion-label>
             </ion-item>

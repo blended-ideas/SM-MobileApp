@@ -39,7 +39,7 @@
                     </ion-item>
                 </ion-col>
             </ion-row>
-            <ion-row>
+            <ion-row *ngIf="shift?.status === 'NEW'">
                 <ion-col>
                     <div class="ion-text-center">
                         <ion-button color="dark" (click)="selectProducts()">Select Product</ion-button>
@@ -57,16 +57,17 @@
                     <div *ngFor="let prod of selectedProducts; let i=index">
                         <ion-row class="ion-no-padding">
                             <ion-col class="ion-no-padding" size="10"><h2>{{prod.name}}</h2></ion-col>
-                            <ion-col class="ion-no-padding ion-text-right" size="2" *ngIf="prod.condition === 'NEW'">
-                                <fa-icon [icon]="faTimesCircle" (click)="removeProductFromList(prod)"></fa-icon>
-                            </ion-col>
+                            <!--                            <ion-col class="ion-no-padding ion-text-right" size="2" *ngIf="prod.condition === 'NEW'">-->
+                            <!--                                <fa-icon [icon]="faTimesCircle" (click)="removeProductFromList(prod)"></fa-icon>-->
+                            <!--                            </ion-col>-->
                         </ion-row>
                         <ion-item class="ion-no-padding">
                             <ion-label>Quantity:</ion-label>
                             <ion-input type="number" [(ngModel)]="prod.quantity" name="quantity{{i}}" [min]="0"
                                        [max]="prod.stock + prod.quantity" [placeholder]="'Enter quantity'" required
                                        (ngModelChange)="disableButton = prod.quantity > prod.stock"
-                                       #qty="ngModel"></ion-input>
+                                       #qty="ngModel"
+                                       [disabled]="shift.status === 'APPROVED' && !isAdmin"></ion-input>
                         </ion-item>
                         <span *ngIf="qty.errors">
                         <span [hidden]="!qty.errors.required">

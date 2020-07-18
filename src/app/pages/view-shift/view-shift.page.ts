@@ -1,12 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ShiftService} from '../../services/shift.service';
-import {ShiftDetailInterface} from '../../interfaces/shift.interface';
+import {ShiftDetailInterface, ShiftEntryInterface} from '../../interfaces/shift.interface';
 import {UtilService} from '../../services/util.service';
 import {SessionService} from '../../services/session.service';
 import {faCheck, faEdit} from '@fortawesome/free-solid-svg-icons';
-import {AlertController, Platform} from '@ionic/angular';
+import {AlertController, ModalController, Platform, PopoverController} from '@ionic/angular';
 import {Subscription} from 'rxjs';
+import {QuantityUpdatePopOverComponent} from '../../components/quantity-update-pop-over/quantity-update-pop-over.component';
+import {ProductSelectorComponent} from '../../components/product-selector/product-selector.component';
 
 @Component({
     selector: 'app-view-shift',
@@ -28,7 +30,9 @@ export class ViewShiftPage implements OnInit, OnDestroy {
                 private sessionService: SessionService,
                 private alertController: AlertController,
                 private platform: Platform,
-                private router: Router) {
+                private router: Router,
+                private popoverController: PopoverController,
+                private modalController: ModalController) {
         this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
             const url = this.router.url.split('/');
             console.log(url);
@@ -52,9 +56,7 @@ export class ViewShiftPage implements OnInit, OnDestroy {
         this.utilService.presentLoading('Fetching Shift Detail');
         this.shiftService.getShiftById(id).subscribe(response => {
             this.shift = response;
-            this.shift.entries.forEach(entry => {
-                entry.entry_total = entry.price * entry.quantity;
-            });
+            this.computeShiftEntryValues();
             this.checkAllowEdit();
             this.utilService.dismissLoading();
         }, () => {
@@ -75,7 +77,7 @@ export class ViewShiftPage implements OnInit, OnDestroy {
                     handler: () => {
                         this.shiftService.approveShift(this.shift.id).subscribe(response => {
                             this.shift = response;
-                            this.checkAllowEdit();
+                            this.computeShiftEntryValues();
                             this.utilService.presentToast('Shift Approved', 3000);
                         });
                     }
@@ -84,6 +86,29 @@ export class ViewShiftPage implements OnInit, OnDestroy {
         });
         await alert.present();
 
+    }
+
+    async closeShift() {
+        const alert = await this.alertController.create({
+            header: 'Close Shift?',
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Close',
+                    handler: () => {
+                        this.shiftService.closeShift(this.shift.id).subscribe(response => {
+                            this.shift = response;
+                            this.computeShiftEntryValues();
+                            this.utilService.presentToast('Shift Closed. Waiting for approval', 3000);
+                        });
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 
     ngOnDestroy() {
@@ -98,7 +123,47 @@ export class ViewShiftPage implements OnInit, OnDestroy {
         }
     }
 
+    async quantityUpdate(entry: ShiftEntryInterface) {
+        const popOver = await this.popoverController.create({
+            component: QuantityUpdatePopOverComponent,
+            componentProps: {
+                entry
+            }
+        });
+        await popOver.present();
+        await popOver.onDidDismiss().then(data => {
+            if (data.data) {
+                entry = data.data;
+                this.fetchShiftById(this.shift.id);
+            }
+        });
+    }
+
+    async selectProducts() {
+        const modal = await this.modalController.create({
+            component: ProductSelectorComponent,
+            componentProps: {
+                shift: this.shift
+            }
+        });
+        await modal.present();
+        await modal.onDidDismiss().then(data => {
+            console.log(data.data);
+            if (data.data) {
+                // this.selectedProducts = data.data;
+                this.shift = data.data;
+                this.fetchShiftById(this.shift.id);
+            }
+        });
+    }
+
     private checkAllowEdit() {
         this.allowEdit = (this.sessionService.isAuditor() && !this.shift.approved) || this.sessionService.isAdmin();
+    }
+
+    private computeShiftEntryValues() {
+        this.shift.entries.forEach(entry => {
+            entry.entry_total = entry.price * entry.quantity;
+        });
     }
 }

@@ -22,7 +22,9 @@ export const PRODUCT_APIS = {
 export const SHIFT_APIS = {
     detail: environment.base_url + 'shifts/detail/',
     entry: environment.base_url + 'shifts/entry/',
-    approve: 'approve'
+    approve: 'approve',
+    close_shift: 'close_shift',
+    add_products: 'add_products'
 };
 export const REPORT_APIS = {
     daily: environment.base_url + 'reports/daily_margin/',

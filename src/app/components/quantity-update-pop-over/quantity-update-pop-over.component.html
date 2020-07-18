@@ -1,0 +1,11 @@
+<ion-content>
+    <ion-item class="form-group">
+        <ion-label [position]="'floating'">Quantity:</ion-label>
+        <ion-input class="form-control form-control-sm" [(ngModel)]="entry.quantity" id="entry.quantity"
+                   type="number"></ion-input>
+    </ion-item>
+    <div class="ion-text-right">
+        <ion-button [size]="'small'" [color]="'danger'" (click)="dismiss()">Cancel</ion-button>
+        <ion-button [size]="'small'" [color]="'dark'" (click)="onSave()">Update</ion-button>
+    </div>
+</ion-content>

@@ -40,13 +40,13 @@
                 </ion-item>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col>
-                <div class="ion-text-center">
-                    <ion-button color="dark" (click)="selectProducts()">Select Product</ion-button>
-                </div>
-            </ion-col>
-        </ion-row>
+        <!--        <ion-row>-->
+        <!--            <ion-col>-->
+        <!--                <div class="ion-text-center">-->
+        <!--                    <ion-button color="dark" (click)="selectProducts()">Select Product</ion-button>-->
+        <!--                </div>-->
+        <!--            </ion-col>-->
+        <!--        </ion-row>-->
     </ion-grid>
     <hr/>
     <form #shiftForm="ngForm" class="border-top pt-2"
@@ -66,7 +66,6 @@
                             <ion-label>Quantity:</ion-label>
                             <ion-input type="number" [(ngModel)]="prod.quantity" name="quantity{{i}}" [min]="0"
                                        [max]="prod.stock + prod.quantity" [placeholder]="'Enter quantity'" required
-                                       (ngModelChange)="disableButton = prod.quantity > prod.stock"
                                        #qty="ngModel"></ion-input>
                         </ion-item>
                         <span *ngIf="qty.errors">

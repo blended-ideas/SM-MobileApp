@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {ShiftDetailInterface} from '../interfaces/shift.interface';
+import {ShiftDetailInterface, ShiftEntryInterface} from '../interfaces/shift.interface';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {SHIFT_APIS} from '../constants/api.constants';
 import {PaginatedResponseInterface} from '../interfaces/paginatedResponse.interface';
@@ -46,9 +46,21 @@ export class ShiftService implements OnDestroy {
         return this.httpClient.patch<ShiftDetailInterface>(`${SHIFT_APIS.detail}${shiftId}/${SHIFT_APIS.approve}/`, {});
     }
 
+    closeShift(shiftId: string) {
+        return this.httpClient.patch<ShiftDetailInterface>(`${SHIFT_APIS.detail}${shiftId}/${SHIFT_APIS.close_shift}/`, {});
+    }
+
     ngOnDestroy(): void {
         console.log('shift service: On Destroy');
         this.shiftSubject.complete();
+    }
+
+    updateShiftEntry(shiftEntryId, patchObj: object): Observable<ShiftEntryInterface> {
+        return this.httpClient.patch<ShiftEntryInterface>(`${SHIFT_APIS.entry}${shiftEntryId}/`, patchObj);
+    }
+
+    addProductsToShift(shiftId: string, products: object) {
+        return this.httpClient.patch<ShiftDetailInterface>(`${SHIFT_APIS.detail}${shiftId}/${SHIFT_APIS.add_products}/`, products);
     }
 
 }

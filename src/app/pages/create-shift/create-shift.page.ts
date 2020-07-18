@@ -74,10 +74,10 @@ export class CreateShiftPage implements OnInit, OnDestroy {
             this.utilService.presentToast('Fill all the required fields', 3000);
             return;
         }
-        if (this.selectedProducts.length === 0) {
-            this.utilService.presentToast('Select product', 3000);
-            return;
-        }
+        // if (this.selectedProducts.length === 0) {
+        //     this.utilService.presentToast('Select product', 3000);
+        //     return;
+        // }
         const dateNow = new Date();
         if (this.shiftView.startTime > this.shiftView.endTime) {
             alert('End date/time cannot be less than start date/time');
@@ -99,7 +99,7 @@ export class CreateShiftPage implements OnInit, OnDestroy {
         this.shiftService.createShift(postObj).subscribe(response => {
             this.utilService.presentToast('Shift Created Successfully', 2000);
             this.utilService.dismissLoading();
-            this.router.navigate(['/shift']);
+            this.router.navigate(['/view-shift', response.id]);
         }, () => {
             this.utilService.dismissLoading();
         });

@@ -13,6 +13,7 @@ import {MarginCardComponent} from './margin-card/margin-card.component';
 import {PipeModule} from '../pipe/pipe.module';
 import {CreateEditUserComponent} from './create-edit-user/create-edit-user.component';
 import {ChangePasswordComponent} from './change-password/change-password.component';
+import {QuantityUpdatePopOverComponent} from './quantity-update-pop-over/quantity-update-pop-over.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import {ChangePasswordComponent} from './change-password/change-password.compone
         AddExpiryDatePopOverComponent,
         MarginCardComponent,
         CreateEditUserComponent,
-        ChangePasswordComponent
+        ChangePasswordComponent,
+        QuantityUpdatePopOverComponent
     ],
     imports: [
         CommonModule,
@@ -35,7 +37,8 @@ import {ChangePasswordComponent} from './change-password/change-password.compone
         PipeModule
     ],
     exports: [MarginCardComponent],
-    entryComponents: [StockUpdatePopOverComponent, AddExpiryDatePopOverComponent],
+    entryComponents: [StockUpdatePopOverComponent, AddExpiryDatePopOverComponent, QuantityUpdatePopOverComponent,
+        ProductSelectorComponent],
     providers: []
 })
 export class ComponentsModule {

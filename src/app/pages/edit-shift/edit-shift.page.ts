@@ -8,6 +8,7 @@ import {UtilService} from '../../services/util.service';
 import {ProductSelectorComponent} from '../../components/product-selector/product-selector.component';
 import {ModalController, Platform} from '@ionic/angular';
 import {Subscription} from 'rxjs';
+import {SessionService} from '../../services/session.service';
 
 @Component({
     selector: 'app-edit-shift',
@@ -22,6 +23,7 @@ export class EditShiftPage implements OnInit, OnDestroy {
     shiftForm: FormGroup;
     today = new Date().toISOString();
     disableButton: boolean;
+    isAdmin: boolean;
     @ViewChild('entryForm', {static: false}) entryForm: NgForm;
     backButtonSubscription: Subscription;
 
@@ -31,7 +33,8 @@ export class EditShiftPage implements OnInit, OnDestroy {
                 private utilService: UtilService,
                 private router: Router,
                 private modalController: ModalController,
-                private platform: Platform) {
+                private platform: Platform,
+                private sessionService: SessionService) {
         this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
             const url = this.router.url.split('/');
             console.log(url);
@@ -42,6 +45,7 @@ export class EditShiftPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.isAdmin = this.sessionService.isAdmin();
         this.route.paramMap.subscribe(paramMap => {
             if (paramMap.has('shiftId')) {
                 this.fetchShift(paramMap.get('shiftId'));
@@ -74,6 +78,8 @@ export class EditShiftPage implements OnInit, OnDestroy {
             stock: e.product_available_stock,
             condition: 'EDIT'
         })) : [];
+        this.shiftForm.controls['start_date'].disable();
+        this.shiftForm.controls['end_date'].disable();
     }
 
     editShift() {
@@ -86,10 +92,10 @@ export class EditShiftPage implements OnInit, OnDestroy {
             this.utilService.presentToast('Fill all the required fields', 3000);
             return;
         }
-        if (this.selectedProducts.length === 0) {
-            this.utilService.presentToast('Select product', 3000);
-            return;
-        }
+        // if (this.selectedProducts.length === 0) {
+        //     this.utilService.presentToast('Select product', 3000);
+        //     return;
+        // }
         const formValue = this.shiftForm.getRawValue();
         if (formValue.start_date > formValue.end_date) {
             alert('Start date cannot be less than end date');

@@ -6,6 +6,8 @@ import {HttpParams} from '@angular/common/http';
 import {ProductService} from '../../services/product.service';
 import {UtilService} from '../../services/util.service';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
+import {ShiftDetailInterface} from '../../interfaces/shift.interface';
+import {ShiftService} from '../../services/shift.service';
 
 @Component({
     selector: 'app-product-selector',
@@ -13,7 +15,8 @@ import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
     styleUrls: ['./product-selector.component.scss'],
 })
 export class ProductSelectorComponent implements OnInit {
-    @Input() selectedProducts: { id?: string, name: string, product: string, quantity: number, checked?: boolean, stock: number, condition: string }[] = [];
+    // @Input() selectedProducts: { id?: string, name: string, product: string, quantity: number, checked?: boolean, stock: number, condition: string }[] = [];
+    @Input() shift: ShiftDetailInterface;
     isLoading: boolean;
     products: ProductInterface[] = [];
     searchText: string;
@@ -22,11 +25,12 @@ export class ProductSelectorComponent implements OnInit {
     constructor(private modalController: ModalController,
                 private productService: ProductService,
                 private utilService: UtilService,
-                private barcodeScanner: BarcodeScanner) {
+                private barcodeScanner: BarcodeScanner,
+                private shiftService: ShiftService) {
     }
 
     ngOnInit() {
-        console.log(this.selectedProducts);
+        // console.log(this.selectedProducts);
         this.fetchProducts(true);
     }
 
@@ -46,15 +50,15 @@ export class ProductSelectorComponent implements OnInit {
                 p.checked = false;
                 p.condition = 'NEW';
             });
-            if (this.selectedProducts.length > 0) {
-                this.selectedProducts.forEach((sp) => {
-                    const prd = this.products.find(p => p.id === sp.product);
-                    if (prd) {
-                        prd.checked = true;
-                        prd.condition = 'EDIT';
-                    }
-                });
-            }
+            // if (this.selectedProducts.length > 0) {
+            //     this.selectedProducts.forEach((sp) => {
+            //         const prd = this.products.find(p => p.id === sp.product);
+            //         if (prd) {
+            //             prd.checked = true;
+            //             prd.condition = 'EDIT';
+            //         }
+            //     });
+            // }
             console.log(this.products);
             this.next = response.next;
             // if (infiniteScroll) {
@@ -71,22 +75,36 @@ export class ProductSelectorComponent implements OnInit {
         });
     }
 
+    addProductToShiftList() {
+        // TODO: Make Call to backend
+        const productArray = this.products.filter(p => p.checked).map(entry => ({
+            product: entry.id,
+            quantity: 1,
+        }));
+        this.shiftService.addProductsToShift(this.shift.id, {entries: productArray}).subscribe(response => {
+            this.shift = response;
+            this.dismiss(true);
+        }, (error) => {
+            console.log(error);
+        });
+    }
+
 
     dismiss(boolVal) {
-        const prds = this.products.filter(p => p.checked && p.condition !== 'EDIT') || [];
-        console.log(prds);
-        if (prds.length > 0) {
-            this.selectedProducts = this.selectedProducts.concat(...prds.map(sp => ({
-                product: sp.id,
-                quantity: sp.quantity,
-                name: sp.name,
-                checked: sp.checked,
-                stock: sp.stock,
-                condition: 'NEW'
-            })));
-        }
-        console.log(this.selectedProducts);
-        boolVal ? this.modalController.dismiss(this.selectedProducts) : this.modalController.dismiss();
+        // const prds = this.products.filter(p => p.checked && p.condition !== 'EDIT') || [];
+        // console.log(prds);
+        // if (prds.length > 0) {
+        //     this.selectedProducts = this.selectedProducts.concat(...prds.map(sp => ({
+        //         product: sp.id,
+        //         quantity: sp.quantity,
+        //         name: sp.name,
+        //         checked: sp.checked,
+        //         stock: sp.stock,
+        //         condition: 'NEW'
+        //     })));
+        // }
+        // console.log(this.selectedProducts);
+        boolVal ? this.modalController.dismiss(this.shift) : this.modalController.dismiss();
     }
 
 

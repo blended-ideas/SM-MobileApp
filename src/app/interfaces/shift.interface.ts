@@ -24,6 +24,8 @@ export interface ShiftDetailInterface {
     approved: boolean;
     approved_by: number;
 
+    status: 'NEW' | 'WAITING_FOR_APPROVAL' | 'APPROVED';
+
 
     price_total: number;
     distributor_margin_total: number;
