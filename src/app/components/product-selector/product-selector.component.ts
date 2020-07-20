@@ -1,13 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {ProductInterface} from '../../interfaces/product.interface';
-import {ParamMap} from '@angular/router';
 import {HttpParams} from '@angular/common/http';
 import {ProductService} from '../../services/product.service';
 import {UtilService} from '../../services/util.service';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 import {ShiftDetailInterface} from '../../interfaces/shift.interface';
 import {ShiftService} from '../../services/shift.service';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {faTimesCircle} from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
     selector: 'app-product-selector',
@@ -15,34 +17,40 @@ import {ShiftService} from '../../services/shift.service';
     styleUrls: ['./product-selector.component.scss'],
 })
 export class ProductSelectorComponent implements OnInit {
-    // @Input() selectedProducts: { id?: string, name: string, product: string, quantity: number, checked?: boolean, stock: number, condition: string }[] = [];
     @Input() shift: ShiftDetailInterface;
     isLoading: boolean;
     products: ProductInterface[] = [];
+    selectedProduct: ProductInterface;
     searchText: string;
     next: string;
+    productListForm: FormGroup;
+    faTimesCircle = faTimesCircle;
 
     constructor(private modalController: ModalController,
                 private productService: ProductService,
                 private utilService: UtilService,
                 private barcodeScanner: BarcodeScanner,
-                private shiftService: ShiftService) {
+                private shiftService: ShiftService,
+                private fb: FormBuilder) {
     }
 
     ngOnInit() {
-        // console.log(this.selectedProducts);
-        this.fetchProducts(true);
+        this.productListForm = this.fb.group({
+            entries: this.fb.array([])
+        });
     }
 
     fetchProducts(emptyArray?: boolean, link?: string, infiniteScroll?: any) {
         this.isLoading = true;
-        this.utilService.presentLoading('Loading Products...');
+        // this.utilService.presentLoading('Loading Products...');
         if (emptyArray) {
             this.products = [];
         }
         let params = new HttpParams().set('page_size', '10');
         if (this.searchText) {
             params = params.set('search', this.searchText);
+        } else {
+            return;
         }
         this.productService.getProducts(params, link).subscribe(response => {
             this.products = this.products.concat(...response.results);
@@ -50,36 +58,34 @@ export class ProductSelectorComponent implements OnInit {
                 p.checked = false;
                 p.condition = 'NEW';
             });
-            // if (this.selectedProducts.length > 0) {
-            //     this.selectedProducts.forEach((sp) => {
-            //         const prd = this.products.find(p => p.id === sp.product);
-            //         if (prd) {
-            //             prd.checked = true;
-            //             prd.condition = 'EDIT';
-            //         }
-            //     });
-            // }
             console.log(this.products);
             this.next = response.next;
-            // if (infiniteScroll) {
-            //     infiniteScroll.target.complete();
-            // }
             this.isLoading = false;
-            this.utilService.dismissLoading();
+            // this.utilService.dismissLoading();
         }, () => {
-            // if (infiniteScroll) {
-            //     infiniteScroll.target.complete();
-            // }
-            this.utilService.dismissLoading();
+            // this.utilService.dismissLoading();
             this.isLoading = false;
         });
     }
 
+    // addProductToShiftList() {
+    //     // TODO: Make Call to backend
+    //     const productArray = this.products.filter(p => p.checked).map(entry => ({
+    //         product: entry.id,
+    //         quantity: 1,
+    //     }));
+    //     this.shiftService.addProductsToShift(this.shift.id, {entries: productArray}).subscribe(response => {
+    //         this.shift = response;
+    //         this.dismiss(true);
+    //     }, (error) => {
+    //         console.log(error);
+    //     });
+    // }
     addProductToShiftList() {
         // TODO: Make Call to backend
-        const productArray = this.products.filter(p => p.checked).map(entry => ({
-            product: entry.id,
-            quantity: 1,
+        const productArray = this.productListForm.value.entries.map(entry => ({
+            product: entry.product.id,
+            quantity: entry.quantity,
         }));
         this.shiftService.addProductsToShift(this.shift.id, {entries: productArray}).subscribe(response => {
             this.shift = response;
@@ -89,24 +95,33 @@ export class ProductSelectorComponent implements OnInit {
         });
     }
 
+    addProduct(product: ProductInterface) {
+        this.searchText = '';
+        this.products = [];
+        if (product) {
+            const shiftEntries = this.productListForm.controls.entries as FormArray;
+            if (shiftEntries.getRawValue().some(e => e.product.id === product.id)) {
+                return;
+            }
+
+            shiftEntries.push(this.fb.group({
+                product: [product],
+                quantity: [1, [Validators.required, Validators.min(1)]]
+            }));
+        }
+    }
 
     dismiss(boolVal) {
-        // const prds = this.products.filter(p => p.checked && p.condition !== 'EDIT') || [];
-        // console.log(prds);
-        // if (prds.length > 0) {
-        //     this.selectedProducts = this.selectedProducts.concat(...prds.map(sp => ({
-        //         product: sp.id,
-        //         quantity: sp.quantity,
-        //         name: sp.name,
-        //         checked: sp.checked,
-        //         stock: sp.stock,
-        //         condition: 'NEW'
-        //     })));
-        // }
-        // console.log(this.selectedProducts);
         boolVal ? this.modalController.dismiss(this.shift) : this.modalController.dismiss();
     }
 
+    removeProductEntry(index: number) {
+        (this.productListForm.controls.entries as FormArray).removeAt(index);
+    }
+
+    getProductControls(): AbstractControl[] {
+        return (this.productListForm.controls.entries as FormArray).controls;
+    }
 
     doInfiniteScroll(infiniteScroll) {
         this.fetchProducts(false, this.next, infiniteScroll);

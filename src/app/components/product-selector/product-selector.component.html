@@ -21,16 +21,30 @@
 <ion-content>
     <ion-list>
         <ion-item *ngFor="let product of products">
-            <ion-label><h2>{{product.name}} | {{product.category}}</h2></ion-label>
-            <ion-checkbox slot="end" [(ngModel)]="product.checked"></ion-checkbox>
+            <ion-label (click)="addProduct(product)"><h2>{{product.name}} | {{product.category}}</h2></ion-label>
         </ion-item>
     </ion-list>
-    <!--    <ion-infinite-scroll (ionInfinite)="doInfiniteScroll($event)">-->
-    <!--        <ion-infinite-scroll-content-->
-    <!--                [loadingSpinner]="'bubbles'"-->
-    <!--                [loadingText]="'Loading more products...'">-->
-    <!--        </ion-infinite-scroll-content>-->
-    <!--    </ion-infinite-scroll>-->
+    <form *ngIf="productListForm" [formGroup]="productListForm">
+        <ion-card *ngIf="getProductControls().length > 0">
+            <ion-card-content>
+                <ion-row *ngFor="let productCtrl of getProductControls();let i=index" formArrayName="entries">
+                    <ng-container [formGroupName]="i.toString()">
+                        <ion-col class="ion-padding">
+                            <ion-label>{{productCtrl.get('product').value.name}}</ion-label>
+                            <ion-item class="form-group">
+                                <ion-label [position]="'floating'">Quantity</ion-label>
+                                <ion-input class="form-control" type="number" formControlName="quantity"
+                                           id="entries{{i}}"></ion-input>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="1" style="margin-top: auto; margin-bottom: auto">
+                            <fa-icon (click)="removeProductEntry(i)" [icon]="faTimesCircle"></fa-icon>
+                        </ion-col>
+                    </ng-container>
+                </ion-row>
+            </ion-card-content>
+        </ion-card>
+    </form>
     <div class="ion-text-center" *ngIf="next">
         <ion-button size="small" (click)="doInfiniteScroll($event)" color="dark">Load More</ion-button>
     </div>
@@ -42,6 +56,6 @@
 </ion-content>
 <ion-footer>
     <div class="ion-text-right">
-        <ion-button size="small" [fill]="'clear'" (click)="addProductToShiftList()">Select Products</ion-button>
+        <ion-button size="small" [fill]="'clear'" (click)="addProductToShiftList()">Add Products</ion-button>
     </div>
 </ion-footer>

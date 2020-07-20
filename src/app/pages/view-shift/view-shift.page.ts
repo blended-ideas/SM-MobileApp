@@ -127,7 +127,7 @@ export class ViewShiftPage implements OnInit, OnDestroy {
         const popOver = await this.popoverController.create({
             component: QuantityUpdatePopOverComponent,
             componentProps: {
-                entry
+                entry: JSON.parse(JSON.stringify(entry))
             }
         });
         await popOver.present();
