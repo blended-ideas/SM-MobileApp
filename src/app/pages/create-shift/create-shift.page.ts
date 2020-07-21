@@ -74,17 +74,13 @@ export class CreateShiftPage implements OnInit, OnDestroy {
             this.utilService.presentToast('Fill all the required fields', 3000);
             return;
         }
-        // if (this.selectedProducts.length === 0) {
-        //     this.utilService.presentToast('Select product', 3000);
-        //     return;
-        // }
         const dateNow = new Date();
         if (this.shiftView.startTime > this.shiftView.endTime) {
-            alert('End date/time cannot be less than start date/time');
+            this.utilService.presentToast('End date/time cannot be less than start date/time', 3000);
             return;
         }
-        if (dateNow < this.shiftView.startTime || dateNow < this.shiftView.endTime) {
-            alert('Start date and end date should be greater than current date-time');
+        if (dateNow < this.shiftView.startTime) {
+            this.utilService.presentToast('Start date and end date should be greater than current date-time', 3000);
             return;
         }
         const postObj = {
