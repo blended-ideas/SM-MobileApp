@@ -101,7 +101,7 @@ export class EditShiftPage implements OnInit, OnDestroy {
             alert('Start date cannot be less than end date');
             return;
         }
-        if (this.today < formValue.start_date || this.today < formValue.start_date) {
+        if (this.today < formValue.start_date) {
             alert('Start date and end date should be greater than current date-time');
             return;
         }
