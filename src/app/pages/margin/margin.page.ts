@@ -60,7 +60,7 @@ export class MarginPage implements OnInit, OnDestroy {
         }
     }
 
-    private getDayMargin() {
+    getDayMargin() {
         const date = new Date(new Date(this.selectedDay).setHours(0, 0, 0)).toISOString();
         this.isLoading = true;
         this.utilService.presentLoading('Loading margin records');
